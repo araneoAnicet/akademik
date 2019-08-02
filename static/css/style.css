@@ -25,20 +25,20 @@ body {
 .user-name {
     margin-left: 2%;
     font-family: 'Noto Sans JP', sans-serif;
-    color: #a7c9fd;
+    color: #5886ca;
     font-size: 1.5em;
 }
 
 .room {
     margin-left: 2%;
     font-family: 'Noto Sans JP', sans-serif;
-    color: #a7c9fd;
+    color: #5886ca;
     font-size: 1em;
 }
 
 .user-button {
     padding-top: 0.2em;
-    transition-duration: 0.3s;
+    transition-duration: 0.2s;
     text-decoration: none;
     border-style: solid;
     border-width: 0.05em;
@@ -52,7 +52,8 @@ body {
 }
 
 .user-button:hover {
-    background-color: #f1f1f1;
+    background-color: #7e7e7e;
+    color: white;
 }
 
 .calendar {
@@ -72,13 +73,14 @@ body {
     text-decoration: none;
     font-style: none;
     font-family: 'Noto Sans JP', sans-serif;
-    color: #a7c9fd;
+    color: #5886ca;
     text-align: center;
     transition-duration: 0.3s;
 }
 
 .month-button:hover {
-    background-color: rgb(246, 251, 255);
+    background-color: rgb(66, 134, 189);
+    color: white;
 }
 
 
@@ -92,7 +94,7 @@ body {
 
 .week-day {
     font-family: 'Noto Sans JP', sans-serif;
-    color: #a7c9fd;
+    color: #5886ca;
     text-align: center;
 }
 
@@ -119,30 +121,30 @@ body {
 .day-article {
     padding-left: 0.5em;
     font-size: 1em;
-    color: #a7c9fd;
+    color: #5886ca;
     font-family: 'Noto Sans JP', sans-serif;
 }
 
 
 .day-future {
-    border-color: #deeafc;
-    background-color: #f4fbff;
+    border-color: #93c7e4;
+    background-color: #def2fd;
     transition-duration: 0.3s;
 }
 
 .day-future:hover {
-    background-color: #fefeff;
+    background-color: #f9f9ff;
 }
 
 
 .day-current {
     transition-duration: 0.3s;
-    border-color: #c4e6c0;
-    background-color: #f3fff0;
+    border-color: #92d18b;
+    background-color: #d2ffc6;
 }
 
 .day-current:hover {
-    background-color: #fcfffb;
+    background-color: #effaeb;
 }
 
 
