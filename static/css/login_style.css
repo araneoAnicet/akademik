@@ -7,6 +7,10 @@ body {
     background-color: rgb(253, 253, 253);
 }
 
+input {
+    display: inline-flex;
+}
+
 .login-box {
     display: block;
     padding: 1em;
