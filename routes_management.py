@@ -1,5 +1,6 @@
 from flask import render_template
 from db_management import app
+from forms_management import LoginBoxForm, ChangePasswordForm, ForgotPasswordForm 
 
 @app.route('/')
 def index():
@@ -11,11 +12,19 @@ def not_signed_in():
 
 @app.route('/registration')
 def registration():
-    return render_template('registration.html')
+    form = LoginBoxForm()
 
-@app.route('/login')
+    if form.validate_on_submit():
+        print('Gocha!')
+    return render_template('registration.html', form=form)
+
+@app.route('/sign_in')
 def login():
-    return render_template('login.html')
+    form = LoginBoxForm()
+
+    if form.validate_on_submit():
+        print('Gocha!')
+    return render_template('sign_in.html', form=form)
 
 @app.route('/admin')
 def admin():
