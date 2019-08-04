@@ -7,29 +7,33 @@
 
 {% block content %}
     <form class="login-box">
-        {{ form.hidden_tag() }}
         <h1>registration</h1>
-        <div class="input-box name">
-            <h2>name</h2>
-            {{ form.name }}
+        <div class="input-group">
+                {{ form.hidden_tag() }}
+                <div class="input-box">
+                    <h2>name</h2>
+                    {{ form.name }}
+                </div>
+                <div class="input-box">
+                    <h2>surname</h2>
+                    {{ form.surname }}
+                </div>
+                <div class="input-box">
+                    <h2>e-mail</h2>
+                    {{ form.email }}
+                </div>
+                <div class="input-box">
+                    <h2>password</h2>
+                    {{ form.password }}
+                </div>
+                <div class="input-box">
+                    <h2>repeat password</h2>
+                    {{ form.confirm_password }}
+                </div>
         </div>
-        <div class="input-box name">
-            <h2>surname</h2>
-            {{ form.surname }}
+        <div class="btn-group">
+            <button type="submit" class="btn submit">create account</button>
+            <button type="button" onclick="location.href='{{ url_for('sign_in') }}';" class="btn">sign in</button>
         </div>
-        <div class="input-box name">
-            <h2>e-mail</h2>
-            {{ form.email }}
-        </div>
-        <div class="input-box name">
-            <h2>password</h2>
-            {{ form.password }}
-        </div>
-        <div class="input-box name">
-            <h2>repeat password</h2>
-            {{ form.confirm_password }}
-        </div>
-        <button type="submit" class="btn submit">create account</button>
-        <button type="button" onclick="location.href='{{ url_for('sign_in') }}';" class="btn">sign in</button>
     </form>
 {% endblock %}

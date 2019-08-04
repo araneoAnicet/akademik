@@ -7,16 +7,20 @@
 {% block content %}
     <form class="login-box">
             <h1>sign in</h1>
-            <div class="input-box name">
-                <h2>e-mail</h2>
-                {{ form.email }}
+            <div class="input-group">
+                <div class="input-box">
+                        <h2>e-mail</h2>
+                        {{ form.email }}
+                    </div>
+                    <div class="input-box">
+                        <h2>password</h2>
+                        {{ form.password }}
+                    </div>
             </div>
-            <div class="input-box name">
-                <h2>password</h2>
-                {{ form.password }}
+            <div class="btn-group">
+                <button type="submit" class="btn submit">go to main page</button>
+                <button type="button" class="btn">forgot password</button>
+                <button type="button" onclick="location.href='{{ url_for('registration') }}';" class="btn">I have no account</button>
             </div>
-            <button type="submit" class="btn submit">go to main page</button>
-            <button type="button" class="btn">forgot password</button>
-            <button type="button" onclick="location.href='{{ url_for('registration') }}';" class="btn">I have no account</button>
         </form>
 {% endblock %}

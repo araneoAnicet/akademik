@@ -19,7 +19,7 @@ def registration():
     return render_template('registration.html', form=form)
 
 @app.route('/sign_in')
-def login():
+def sign_in():
     form = LoginBoxForm()
 
     if form.validate_on_submit():
