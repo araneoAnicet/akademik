@@ -30,7 +30,7 @@ input {
 
 .input-group {
     display: grid;
-    grid-template-columns: 15em 15em;
+    grid-template-columns: 16em 16em;
 }
 
 .btn-group {
@@ -41,6 +41,7 @@ input {
 .input-box {
     margin: 1em;
 }
+
 .name {
     display: inline-block;
 }
