@@ -8,6 +8,7 @@ class LoginBoxForm(FlaskForm):
     email = StringField(validators=[DataRequired(), Email(), Length(min=4, max=30)])
     password = PasswordField(validators=[DataRequired(), Length(min=8, max=30)])
     confirm_password = PasswordField(validators=[DataRequired(), EqualTo('password')])
+    old_password = StringField(validators=[DataRequired(), Email(), Length(min=8, max=30)])
     submit = SubmitField()
 
 class ForgotPasswordForm(FlaskForm):
