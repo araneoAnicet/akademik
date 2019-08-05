@@ -26,6 +26,14 @@ def sign_in():
         print('Gocha!')
     return render_template('sign_in.html', form=form)
 
+@app.route('/change_password')
+def change_password():
+    form = LoginBoxForm()
+
+    if form.validate_on_submit():
+        print('Gocha!')
+    return render_template('change_password.html', form=form)
+
 @app.route('/admin')
 def admin():
     return render_template('admin.html')
