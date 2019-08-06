@@ -32,6 +32,7 @@ class User(db.Model):
     def __repr__(self):
         return f'{self.name} {self.surname}'
 
+
 class Day(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     day = db.Column(db.Integer, nullable=False)
@@ -41,17 +42,6 @@ class Day(db.Model):
     def __repr__(self):
         return f'{self.day}.{self.month}.{self.year}'
 
-'''
-def user_check(email):
-    searched_user = User.query.filter_by(email=email).first()
-    return True if searched_user else False
-
-def password_encrypt(password):
-    return sha256_crypt.encrypt(password)
-
-def password_verify(user, password):
-    return sha256_crypt.verify(password, user.password)
-'''
 
 class DatabaseManager():
     def __init__(self, app, db, user_obj, day_obj):
