@@ -43,23 +43,30 @@ class Day(db.Model):
         return f'{self.day}.{self.month}.{self.year}'
 
 
+
 class DatabaseManager():
     def __init__(self, app, db, user_obj, day_obj):
         self.app = app
         self.db = db
         self.User = user_obj
         self.Day = day_obj
+
+    class UserAlreadyExistsError(Exception):
+        pass
+
+    class UserDoesNotExistError(Exception):
+        pass
     
     def _user_exists(self, email):
         searched_user = self.User.query.filter_by(email=email).first()
         if not searched_user:
-            raise UserDoesNotExistError('User with this email does not exist')
+            raise self.UserDoesNotExistError('User with this email does not exist')
         return searched_user
 
     def _not_user_exists(self, email):
         searched_user = self.User.query.filter_by(email=email).first()
         if searched_user:
-            raise UserAlreadyExistsError(f'User with this email already exists: {searched_user}')
+            raise self.UserAlreadyExistsError(f'User with this email already exists: {searched_user}')
 
     def _password_encrypt(self, password):
         return sha256_crypt.encrypt(password)
