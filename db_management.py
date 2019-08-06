@@ -1,6 +1,7 @@
 from application import app
 from flask_sqlalchemy import SQLAlchemy
 from passlib.hash import sha256_crypt
+from functools import wraps
 
 db = SQLAlchemy(app)
 
@@ -33,7 +34,6 @@ class User(db.Model):
 
 class Day(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    week_day = db.Column(db.String(3), nullable=False)
     day = db.Column(db.Integer, nullable=False)
     month = db.Column(db.Integer, nullable=False)
     year = db.Column(db.Integer, nullable=False)
@@ -41,7 +41,7 @@ class Day(db.Model):
     def __repr__(self):
         return f'{self.day}.{self.month}.{self.year}'
 
-
+'''
 def user_check(email):
     searched_user = User.query.filter_by(email=email).first()
     return True if searched_user else False
@@ -51,3 +51,51 @@ def password_encrypt(password):
 
 def password_verify(user, password):
     return sha256_crypt.verify(password, user.password)
+'''
+
+class DatabaseManager():
+    def __init__(self, app, db, user_obj, day_obj):
+        self.app = app
+        self.db = db
+        self.User = user_obj
+        self.Day = day_obj
+    
+    def _user_exists(self, email):
+        searched_user = self.User.query.filter_by(email=email).first()
+        if not searched_user:
+            raise UserDoesNotExistError('User with this email does not exist')
+        return searched_user
+
+    def _not_user_exists(self, email):
+        searched_user = self.User.query.filter_by(email=email).first()
+        if searched_user:
+            raise UserAlreadyExistsError(f'User with this email already exists: {searched_user}')
+
+    def _password_encrypt(self, password):
+        return sha256_crypt.encrypt(password)
+
+    def _password_verify(self, user, password):
+        return sha256_crypt.verify(password, user.password)
+
+    def user_registration(self, name, surname, email, password):
+        self._not_user_exists(email)
+        encrypted_password = self._password_encrypt(password)
+        new_user = self.User(name=name, surname=surname, email=email, password=encrypted_password)
+        self.db.session.add(new_user)
+        self.db.session.commit()
+
+    def user_sign_in(self, email, password):
+        searched_user = self._user_exists(email)
+        return self._password_verify(searched_user, password)
+
+    def get_user(self, email):
+        return self._user_exists(email)
+
+    def get_day(self, date, create_if_none=False):
+        parsed_date = [int(date_element) for date_element in date.split('.')]
+        searched_day = self.Day.query.filter_by(day=parsed_date[0], month=parsed_date[1], year=parsed_date[2]).first()
+        if create_if_none and not searched_day:
+            self.db.session.add(Day(day=parsed_date[0], month=parsed_date[1], year=parsed_date[2]))
+            self.db.session.commit()
+        return searched_day
+    
