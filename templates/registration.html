@@ -2,38 +2,66 @@
     <title>registration</title>
     <link href="https://fonts.googleapis.com/css?family=Noto+Sans+JP&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=PT+Mono&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../static/css/login_style.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='login_style.css') }}">
 {% endblock %}
 
 {% block content %}
-    <form class="login-box">
+    <form class="login-box" action="{{ url_for('registration') }}" method="POST">
         <h1>registration</h1>
-        <div class="input-group">
+
+<div class="input-group">
                 {{ form.hidden_tag() }}
                 <div class="input-box">
                     <h2>name</h2>
                     {{ form.name }}
+                    {% for error in form.name.errors %}
+                        <h3 class="form-error">{{ error }}</h3>
+                    {% endfor %}
                 </div>
                 <div class="input-box">
                     <h2>surname</h2>
                     {{ form.surname }}
+                    {% for error in form.surname.errors %}
+                        <p class="form-error">{{ error }}</p>
+                    {% endfor %}
                 </div>
                 <div class="input-box">
                     <h2>e-mail</h2>
                     {{ form.email }}
+                    {% for error in form.email.errors %}
+                        <h3 class="form-error">{{ error }}</h3>
+                    {% endfor %}
                 </div>
                 <div class="input-box">
                     <h2>password</h2>
                     {{ form.password }}
+                    {% for error in form.password.errors %}
+                        <h3 class="form-error">{{ error }}</h3>
+                    {% endfor %}
                 </div>
                 <div class="input-box">
                     <h2>repeat password</h2>
                     {{ form.confirm_password }}
+                    {% for error in form.confirm_password.errors %}
+                        <h3 class="form-error">{{ error }}</h3>
+                    {% endfor %}
                 </div>
         </div>
         <div class="btn-group">
-            <button type="submit" class="btn submit">create account</button>
+            {{ form.submit(class="btn submit", value="create account") }}
             <button type="button" onclick="location.href='{{ url_for('sign_in') }}';" class="btn">sign in</button>
         </div>
+        
     </form>
+
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <div class="flash-messages warning">
+        {% for message in messages %}
+        <h3>{{ message }}</h3>
+        {% endfor %}
+    </div>
+    {% endif %}
+{% endwith %}
+
 {% endblock %}

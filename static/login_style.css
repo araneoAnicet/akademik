@@ -7,6 +7,40 @@ body {
     background-color: rgb(253, 253, 253);
 }
 
+.flash-messages {
+    margin-top: 2em;
+    margin-bottom: 2em;
+    display: block;
+    padding: 1em;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    font-family: 'PT Mono', monospace;
+    font-size: 0.8em;
+    padding: 0.2em;
+    width: 30%;
+    border-style: solid;
+    border-radius: 0.5em;
+    border-width: 0.1em;
+    border-color: #5886ca;
+    background-color: #cdd4f0;
+    color: #5886ca;
+
+}
+
+.form-error {
+    font-family: 'PT Mono', monospace;
+    font-size: 1em;
+    color: #df3939;
+    text-align: left;
+}
+
+.warning {
+    border-color: #8d1616;
+    background-color: #dd7676;
+    color: #8d1616;
+}
+
 input {
     display: inline-flex;
 }

@@ -1,8 +1,10 @@
-from flask import render_template
-from db_management import app
-from forms_management import LoginBoxForm, ChangePasswordForm, ForgotPasswordForm 
+from flask import render_template, redirect, flash, url_for, request
+from db_management import app, DatabaseManager, db, User, Day
+from forms_management import LoginBoxForm, ChangePasswordForm, ForgotPasswordForm, RegistrationBoxForm
 
-@app.route('/')
+dm = DatabaseManager(app, db, User, Day)
+
+@app.route('/', methods=['GET'])
 def index():
     return render_template('index.html')
 
@@ -10,12 +12,24 @@ def index():
 def not_signed_in():
     return render_template('not_signed_in.html')
 
-@app.route('/registration')
+@app.route('/registration', methods=['GET', 'POST'])
 def registration():
-    form = LoginBoxForm()
+    form = RegistrationBoxForm()
 
     if form.validate_on_submit():
-        print('Gocha!')
+        print('\n\nEntered submit button\n\n')
+        try:
+            dm.user_registration(
+                form.data['name'],
+                form.data['surname'],
+                form.data['email'],
+                form.data['password']
+                )
+            redirect(url_for('index'))
+        except:
+            flash('Sorry, user with such an e-mail already exists.')
+            flash('Please, try again')
+            redirect(url_for('registration'))
     return render_template('registration.html', form=form)
 
 @app.route('/sign_in')

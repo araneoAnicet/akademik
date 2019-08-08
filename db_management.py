@@ -51,11 +51,13 @@ class DatabaseManager():
         self.User = user_obj
         self.Day = day_obj
 
-    class UserAlreadyExistsError(Exception):
-        pass
+    class UserAlreadyExistsError(BaseException):
+        def __init__(self, message):
+            super().__init__(message)
 
-    class UserDoesNotExistError(Exception):
-        pass
+    class UserDoesNotExistError(BaseException):
+        def __init__(self, message):
+            super().__init__(message)
     
     def _user_exists(self, email):
         searched_user = self.User.query.filter_by(email=email).first()

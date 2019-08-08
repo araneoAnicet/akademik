@@ -2,13 +2,17 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField
 from wtforms.validators import Email, Length, DataRequired, EqualTo
 
+class RegistrationBoxForm(FlaskForm):
+    name = StringField('Name', validators=[Length(min=2, max=40), DataRequired()])
+    surname = StringField('Surname', validators=[Length(min=2, max=60), DataRequired()])
+    email = StringField('E-mail', validators=[Email(), Length(min=4, max=30), DataRequired()])
+    password = PasswordField('password', validators=[Length(min=8, max=30), DataRequired()])
+    confirm_password = PasswordField('confirm_password', validators=[Length(min=8, max=30), EqualTo('password', message='fields should be equal'), DataRequired()])
+    submit = SubmitField()
+
 class LoginBoxForm(FlaskForm):
-    name = StringField(validators=[DataRequired(), Length(min=2, max=40)])
-    surname = StringField(validators=[DataRequired(), Length(min=2, max=60)])
     email = StringField(validators=[DataRequired(), Email(), Length(min=4, max=30)])
     password = PasswordField(validators=[DataRequired(), Length(min=8, max=30)])
-    confirm_password = PasswordField(validators=[DataRequired(), EqualTo('password')])
-    old_password = StringField(validators=[DataRequired(), Email(), Length(min=8, max=30)])
     submit = SubmitField()
 
 class ForgotPasswordForm(FlaskForm):
