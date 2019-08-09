@@ -25,19 +25,26 @@ def registration():
                 form.data['email'],
                 form.data['password']
                 )
-            redirect(url_for('index'))
+            return redirect(url_for('index'))
         except:
             flash('Sorry, user with such an e-mail already exists.')
             flash('Please, try again')
-            redirect(url_for('registration'))
+            return redirect(url_for('registration'))
     return render_template('registration.html', form=form)
 
-@app.route('/sign_in')
+@app.route('/sign_in', methods=['GET', 'POST'])
 def sign_in():
     form = LoginBoxForm()
 
     if form.validate_on_submit():
-        print('Gocha!')
+        try:
+            if dm.user_sign_in(form.data['email'], form.data['password']):
+                return redirect(url_for('index'))
+            flash('Incorrect e-mail or password')
+            return redirect(url_for('sign_in'))
+        except:
+            flash('Incorrect e-mail or password')
+            return redirect(url_for('sign_in'))
     return render_template('sign_in.html', form=form)
 
 @app.route('/change_password')

@@ -14,37 +14,27 @@
                 <div class="input-box">
                     <h2>name</h2>
                     {{ form.name }}
-                    {% for error in form.name.errors %}
-                        <h3 class="form-error">{{ error }}</h3>
-                    {% endfor %}
+                    <h3 class="form-error">{{ form.name.errors[0] }}</h3>
                 </div>
                 <div class="input-box">
                     <h2>surname</h2>
                     {{ form.surname }}
-                    {% for error in form.surname.errors %}
-                        <p class="form-error">{{ error }}</p>
-                    {% endfor %}
+                        <h3 class="form-error">{{ form.surname.errors[0] }}</h3>
                 </div>
                 <div class="input-box">
                     <h2>e-mail</h2>
                     {{ form.email }}
-                    {% for error in form.email.errors %}
-                        <h3 class="form-error">{{ error }}</h3>
-                    {% endfor %}
+                    <h3 class="form-error">{{ form.email.errors[0] }}</h3>
                 </div>
                 <div class="input-box">
                     <h2>password</h2>
                     {{ form.password }}
-                    {% for error in form.password.errors %}
-                        <h3 class="form-error">{{ error }}</h3>
-                    {% endfor %}
+                    <h3 class="form-error">{{ form.password.errors[0] }}</h3>
                 </div>
                 <div class="input-box">
                     <h2>repeat password</h2>
                     {{ form.confirm_password }}
-                    {% for error in form.confirm_password.errors %}
-                        <h3 class="form-error">{{ error }}</h3>
-                    {% endfor %}
+                    <h3 class="form-error">{{ form.confirm_password.errors[0] }}</h3>
                 </div>
         </div>
         <div class="btn-group">

@@ -30,7 +30,7 @@ body {
 
 .form-error {
     font-family: 'PT Mono', monospace;
-    font-size: 1em;
+    font-size: 0.6em;
     color: #df3939;
     text-align: left;
 }
