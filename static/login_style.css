@@ -64,17 +64,19 @@ input {
 
 .input-group {
     display: grid;
-    grid-template-columns: 16em 16em;
+    grid-template-columns: 50% 50%;
 }
 
 .btn-group {
     display: grid;
-    grid-template-columns: 12em 12em 12em;
+    grid-template-columns: 30% 30% 30%;
 }
 
 .input-box {
-    margin: 1em;
+    width: auto !important;
+    margin: 2%;
 }
+
 
 .name {
     display: inline-block;
@@ -98,7 +100,7 @@ h2 {
     background-color: white;
     text-decoration: none;
     display: inline-block;
-    width: 10em;
+    width: auto !important;
     height: 2em;
     border-style: solid;
     border-color: #5886ca;
@@ -108,7 +110,7 @@ h2 {
     text-decoration: none;
     font-style: none;
     font-family: 'Noto Sans JP', sans-serif;
-    font-size: 1em;
+    font-size: auto !important;
     color: #5886ca;
     text-align: center;
     transition-duration: 0.2s;
