@@ -4,9 +4,7 @@ def get_today():
     return datetime.utcnow()
 
 def is_leap_year():
-    if get_today().year % 4 == 0:
-        return True
-    return False
+    return True if get_today().year % 4 == 0 else False
 
 def year_months():
     return {
