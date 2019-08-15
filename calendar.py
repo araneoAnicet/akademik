@@ -1,4 +1,4 @@
-from datetime import datetime, date, time
+from datetime import datetime, date
 
 def get_today():
     return datetime.utcnow()
