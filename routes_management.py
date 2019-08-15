@@ -12,6 +12,7 @@ def index():
 def not_signed_in():
     return render_template('not_signed_in.html')
 
+
 @app.route('/registration', methods=['GET', 'POST'])
 def registration():
     form = RegistrationBoxForm()
@@ -32,6 +33,7 @@ def registration():
             return redirect(url_for('registration'))
     return render_template('registration.html', form=form)
 
+
 @app.route('/sign_in', methods=['GET', 'POST'])
 def sign_in():
     form = LoginBoxForm()
@@ -47,6 +49,7 @@ def sign_in():
             return redirect(url_for('sign_in'))
     return render_template('sign_in.html', form=form)
 
+
 @app.route('/change_password')
 def change_password():
     form = LoginBoxForm()
@@ -54,6 +57,7 @@ def change_password():
     if form.validate_on_submit():
         print('Gocha!')
     return render_template('change_password.html', form=form)
+
 
 @app.route('/admin')
 def admin():
