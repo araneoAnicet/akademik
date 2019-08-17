@@ -1,12 +1,17 @@
 from flask import render_template, redirect, flash, url_for, request
 from db_management import app, DatabaseManager, db, User, Day
 from forms_management import LoginBoxForm, ChangePasswordForm, ForgotPasswordForm, RegistrationBoxForm
+from calendar import current_month_days, get_today
 
 dm = DatabaseManager(app, db, User, Day)
 
-@app.route('/', methods=['GET'])
-def index():
+@app.route('/<requested_month>', methods=['GET'])
+def index(requested_month=None):
+    if requested_month:
+        pass
+
     return render_template('index.html')
+
 
 @app.route('/oups')
 def not_signed_in():
