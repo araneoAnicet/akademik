@@ -20,8 +20,10 @@
     margin: 1em;
 }
 
+
+
 .navigation-bar {
-    position: absolute;
+    position: fixed;
     width: 20%;
     height: 100%;
     z-index: 3;
