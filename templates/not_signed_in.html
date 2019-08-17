@@ -1,18 +1,15 @@
-<html>
-    <head>
-        <title>sorry...</title>
-        <link rel="stylesheet" href="../static/css/sorry_style.css">
-        <link href="https://fonts.googleapis.com/css?family=Noto+Sans+JP&display=swap" rel="stylesheet">
-        <link href="https://fonts.googleapis.com/css?family=PT+Mono&display=swap" rel="stylesheet">
-    </head>
-    <body>
-        <div class="message">
-            <h1>sorry...</h1>
-            <h2>Looks like you are not signed in.</h2>
-            <h2>Please, go to our registration or sign in page</h2>
-            <h2>and finish your authorization process.</h2>
-            <button type="button" class="btn">registration</button>
-            <button type="button" class="btn">sign in</button>
-        </div>
-    </body>
-</html>
+{% extends "base.html" %}
+{% block title %}
+    registration
+{% endblock %}
+
+{% block content %}
+<div class="centred-box">
+<h1>Oups...</h1>
+<h2>Seems like you're not signed in.</h2>
+<h2>You can't use this service if you are not signed in.</h2>
+<h2>Choose any of these options:</h2>
+<button class="btn btn-primary" onclick="location.href='{{ url_for('registration') }}'">sign in</button>
+<button class="btn btn-primary" onclick="location.href='{{ url_for('sign_in') }}'">registration</button>
+</div>
+{% endblock %}

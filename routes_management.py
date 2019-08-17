@@ -5,11 +5,8 @@ from calendar import current_month_days, get_today
 
 dm = DatabaseManager(app, db, User, Day)
 
-@app.route('/<requested_month>', methods=['GET'])
-def index(requested_month=None):
-    if requested_month:
-        pass
-
+@app.route('/', methods=['GET'])
+def index():
     return render_template('index.html')
 
 
@@ -29,7 +26,8 @@ def registration():
                 form.data['name'],
                 form.data['surname'],
                 form.data['email'],
-                form.data['password']
+                form.data['password'],
+                form.data['room']
                 )
             return redirect(url_for('index'))
         except:

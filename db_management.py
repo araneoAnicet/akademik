@@ -21,6 +21,7 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(40), nullable=False)
     surname = db.Column(db.String(60), nullable=False)
+    room = db.Column(db.Integer, nullable=False)
     email = db.Column(db.String(80), unique=True, nullable=False)
     password = db.Column(db.String(100), nullable=False)
 
@@ -76,10 +77,10 @@ class DatabaseManager():
     def _password_verify(self, user, password):
         return sha256_crypt.verify(password, user.password)
 
-    def user_registration(self, name, surname, email, password):
+    def user_registration(self, name, surname, email, password, room):
         self._not_user_exists(email)
         encrypted_password = self._password_encrypt(password)
-        new_user = self.User(name=name, surname=surname, email=email, password=encrypted_password)
+        new_user = self.User(name=name, surname=surname, email=email, password=encrypted_password, room=room)
         self.db.session.add(new_user)
         self.db.session.commit()
 
