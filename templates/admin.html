@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="top">
+    <h1>admin page...</h1>
+</div>
+
+
+<div class="card text-center">
+    <div class="card-header">
+      <ul class="nav nav-tabs card-header-tabs">
+        <li class="nav-item">
+          <a class="nav-link" href="#">days</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">registrations</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#" tabindex="-1" aria-disabled="true">profile changes</a>
+        </li>
+      </ul>
+    </div>
+    <div class="card-body">
+      
+        <!--
+            Here is the table
+        -->
+          
+
+
+<table class="table">
+    <thead class="thead-dark">
+      <tr>
+        <th scope="col">№</th>
+        <th scope="col">Status</th>
+        <th scope="col">Name & Surname</th>
+        <th scope="col">Room</th>
+        <th scope="col">Day</th>
+        <th scope="col">commit</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th scope="row">1</th>
+        <th class="btn-outline-success">New!</th>
+        <td>Mark Otto</td>
+        <td>712</td>
+        <td>18.11.2019</td>
+        <td class="btn-group">
+                <button class="btn btn-outline-success">accept</button>
+                <button class="btn btn-outline-danger">reject</button>
+        </td>
+      </tr>
+      <tr>
+        <th scope="row">2</th>
+        <th class="btn-outline-success">New!</th>
+        <td>Jacob Thornton</td>
+        <td>702</td>
+        <td>13.11.2019</td>
+        <td class="btn-group">
+            <button class="btn btn-outline-success">accept</button>
+            <button class="btn btn-outline-danger">reject</button>
+    </td>
+      </tr>
+      <tr>
+        <th scope="row">3</th>
+        <th class="btn-outline-info">Still waiting...</th>
+        <td>Larry Bird</td>
+        <td>707</td>
+        <td>13.11.2019</td>
+        <td class="btn-group">
+            <button class="btn btn-outline-success">accept</button>
+            <button class="btn btn-outline-danger">reject</button>
+    </td>
+      </tr>
+    </tbody>
+  </table>
+        <!--
+            Here it ends
+        -->
+    </div>
+  </div>
+{% endblock %}

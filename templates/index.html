@@ -3,46 +3,49 @@
     main
 {% endblock %}
 
-
 {% block sidebar %}
-<ul class="nav nav-pills navigation-bar flex-column" id="ui">
-    <li>
-        <h3>name surname</h3>
-        <h4>room</h4>
-    </li>
-    <li class="nav-item">
-        <button class="nav-link navigation-btn btn-block" href="#" v-on:click="show = !show">edit profile</button>
-    </li>
-    <li class="nav-item">
-            <button class="nav-link navigation-btn btn-danger btn-block" href="#">log out</button>
-    </li>
+<div id="app">
+    
+            <ul class="nav fixed-pos nav-pills navigation-bar flex-column" id="ui">
+                <li>
+                    <h3>name surname</h3>
+                    <h4>room</h4>
+                </li>
+                <li class="nav-item">
+                    <button class="nav-link navigation-btn btn-block" v-on:click="show = !show">edit profile</button>
+                </li>
+                <li class="nav-item">
+                        <button class="nav-link navigation-btn btn-danger btn-block" id="logoutButton" data-toggle="modal" data-target="#logoutWindow">log out</button>
+                </li>
+            
+                <transition name="fade">
+                    <li v-if="show" class="profile-settings" id="settings-box">
+                            <h3>settings...</h3>
+                            <br>
+                            <label>new name</label>
+                            <input type="text" class="form-control" placeholder="new name here...">
+                            
+                            <label>new surname</label>
+                            <input type="text" class="form-control" placeholder="new surname here...">
+                            
+                            <label>new room</label>
+                            <input type="text" class="form-control" placeholder="new room here...">
+                            
+                            <div class="btn-group profile-el">
+                                <button type="button" class="btn btn-outline-success">commit changes</button>
+                                <button type="button" class="btn btn-outline-danger">cancel changes</button>
+                            </div>
+                    
+                            <div class="btn-group profile-el">
+                                <button type="button" class="btn btn-primary">change e-mail</button>
+                                <button type="button" class="btn btn-primary">change password</button>
+                            </div>
+                        </li>
+                </transition>
+            
+            </ul>
 
-    <transition name="fade">
-        <li v-if="show" class="profile-settings" id="settings-box">
-                <h3>settings...</h3>
-                <br>
-                <label>new name</label>
-                <input type="text" class="form-control" placeholder="new name here...">
-                
-                <label>new surname</label>
-                <input type="text" class="form-control" placeholder="new surname here...">
-                
-                <label>new room</label>
-                <input type="text" class="form-control" placeholder="new room here...">
-                
-                <div class="btn-group profile-el">
-                    <button type="button" class="btn btn-outline-success">commit changes</button>
-                    <button type="button" class="btn btn-outline-danger">cancel changes</button>
-                </div>
-        
-                <div class="btn-group profile-el">
-                    <button type="button" class="btn btn-primary">change e-mail</button>
-                    <button type="button" class="btn btn-primary">change password</button>
-                </div>
-            </li>
-    </transition>
-
-</ul>
+</div>
 {% endblock %}
 
 {% block content %}
