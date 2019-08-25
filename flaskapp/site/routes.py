@@ -1,6 +1,6 @@
 from flask import render_template, redirect, flash, url_for, request, Blueprint
 from flaskapp import db
-from flaskapp.site.models import DatabaseManager, User, Day
+from flaskapp.models import DatabaseManager, User, Day
 from flaskapp.site.forms import LoginBoxForm, ChangePasswordForm, ForgotPasswordForm, RegistrationBoxForm
 
 
