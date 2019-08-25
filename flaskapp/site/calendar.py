@@ -27,6 +27,5 @@ def current_month_days():
     return month_days(today.month, today.year)
 
 def month_days(month, year):
-    first_month_day = date(year, month, 1)
     last_month_day = date(year, month, year_months()[month])
     return [date(year, month, day) for day in range(1, last_month_day.day + 1)]

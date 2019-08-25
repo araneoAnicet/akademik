@@ -1,9 +1,7 @@
-from application import app
 from flask_sqlalchemy import SQLAlchemy
 from passlib.hash import sha256_crypt
 from functools import wraps
-
-db = SQLAlchemy(app)
+from flaskapp import db
 
 books = db.Table('books',
     db.Column('user_id', db.Integer, db.ForeignKey('user.id'), primary_key=True),
@@ -46,8 +44,7 @@ class Day(db.Model):
 
 
 class DatabaseManager():
-    def __init__(self, app, db, user_obj, day_obj):
-        self.app = app
+    def __init__(self, db, user_obj, day_obj):
         self.db = db
         self.User = user_obj
         self.Day = day_obj
