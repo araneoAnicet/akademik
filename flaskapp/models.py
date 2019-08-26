@@ -16,6 +16,7 @@ accepted = db.Table('accepted',
 
 
 class User(db.Model):
+    is_registered = db.Column(db.Boolean, default=False, nullable=False)
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(40), nullable=False)
     surname = db.Column(db.String(60), nullable=False)
@@ -42,31 +43,62 @@ class Day(db.Model):
         return f'{self.day}.{self.month}.{self.year}'
 
 
+class UserAlreadyExistsError(BaseException):
+    def __init__(self, message):
+        super().__init__(message)
+
+class UserDoesNotExistError(BaseException):
+    def __init__(self, message):
+        super().__init__(message)
+
+class UserAcceptedRegistrationError(BaseException):
+    def __init__(self, message):
+        super().__init__(message)
+
+class UserRejectedRegistrationError(BaseException):
+    def __init__(self, message):
+        super().__init__(message)
+
+db_errors = {
+    'USER_ALREADY_EXISTS': UserAlreadyExistsError,
+    'USER_DOES_NOT_EXISTS': UserDoesNotExistError,
+    'USER_REGISTRATION_ACCEPTED': UserAcceptedRegistrationError,
+    'USER_REGISTRATION_REJECTED': UserRejectedRegistrationError
+}
+
 
 class DatabaseManager():
     def __init__(self, db, user_obj, day_obj):
         self.db = db
         self.User = user_obj
         self.Day = day_obj
-
-    class UserAlreadyExistsError(BaseException):
-        def __init__(self, message):
-            super().__init__(message)
-
-    class UserDoesNotExistError(BaseException):
-        def __init__(self, message):
-            super().__init__(message)
     
+    # validator
     def _user_exists(self, email):
+        # raises an error if does not exist
         searched_user = self.User.query.filter_by(email=email).first()
         if not searched_user:
-            raise self.UserDoesNotExistError('User with this email does not exist')
+            raise UserDoesNotExistError('User with this email does not exist')
         return searched_user
 
+    # validator
     def _not_user_exists(self, email):
+        # raises an error if user exists
         searched_user = self.User.query.filter_by(email=email).first()
         if searched_user:
-            raise self.UserAlreadyExistsError(f'User with this email already exists: {searched_user}')
+            raise UserAlreadyExistsError(f'User with this email already exists: {searched_user}')
+
+    # validator
+    def _user_registration_request_accepted(self, email):
+        # raises an error if user registration request has been rejected
+        if self._user_exists(email).is_registered:
+            raise UserRejectedRegistrationError('User with this e-mail has been accepted by the system')
+
+    # validator
+    def _not_user_registration_request_accepted(self, email):
+        # raises an error if user registration request has been accepted
+        if not self._user_exists(email).is_registered:
+            raise UserAcceptedRegistrationError('User with this e-mail has been rejected by the system')
 
     def _password_encrypt(self, password):
         return sha256_crypt.encrypt(password)
