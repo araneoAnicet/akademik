@@ -7,7 +7,7 @@ from flaskapp.site.forms import LoginBoxForm, ChangePasswordForm, ForgotPassword
 mod = Blueprint('site', __name__)
 
 
-dm = DatabaseManager(db, User, Day)
+dm = DatabaseManager(db, User, Day, Profilechange)
 
 @mod.route('/debug', methods=['GET'])
 # testing route!

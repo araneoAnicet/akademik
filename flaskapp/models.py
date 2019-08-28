@@ -43,7 +43,8 @@ class User(db.Model):
     requested_days = db.relationship('Day', secondary=books, lazy='subquery',
         backref=db.backref('requested_by', lazy=True))
 
-    accepted_days = db.relationship('Day', secondary=accepted, lazy='subquery', backref=db.backref('accepted_candidates', lazy=True))
+    accepted_days = db.relationship('Day', secondary=accepted, lazy='subquery',
+        backref=db.backref('accepted_candidates', lazy=True))
 
     def __repr__(self):
         return f'{self.name} {self.surname}'
@@ -87,10 +88,11 @@ db_errors = {
 # =================
 
 class DatabaseManager():
-    def __init__(self, db, user_obj, day_obj):
+    def __init__(self, db, user_obj, day_obj, profilechange_obj):
         self.db = db
         self.User = user_obj
         self.Day = day_obj
+        self.Profilechange = profilechange_obj
     
     # validator
     def _user_exists(self, email):
@@ -138,6 +140,18 @@ class DatabaseManager():
 
     def get_user(self, email):
         return self._user_exists(email)
+
+    def get_unregistrated_users(self):
+        return self.User.query.filter_by(is_registered=False).all()
+    
+    def get_profilechanges(self):
+        return self.Profilechange.query.all()
+
+    def add_profilechange(self, user_email, change_obj):
+        change_copy = change_obj.copy()
+        self.db.session.add(change_copy)
+        self.get_user(user_email).requested_changes.append(change_copy)
+        self.db.session.commit()
 
     def get_day(self, date, create_if_none=False):
         parsed_date = [int(date_element) for date_element in date.split('.')]
