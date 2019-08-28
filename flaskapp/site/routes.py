@@ -1,6 +1,6 @@
 from flask import render_template, redirect, flash, url_for, request, Blueprint
 from flaskapp import db
-from flaskapp.models import DatabaseManager, User, Day
+from flaskapp.models import DatabaseManager, User, Day, Profilechange
 from flaskapp.site.forms import LoginBoxForm, ChangePasswordForm, ForgotPasswordForm, RegistrationBoxForm
 
 
@@ -8,6 +8,11 @@ mod = Blueprint('site', __name__)
 
 
 dm = DatabaseManager(db, User, Day)
+
+@mod.route('/debug', methods=['GET'])
+# testing route!
+def debug():
+    return render_template('debug.html', users=User)
 
 @mod.route('/', methods=['GET'])
 def index():

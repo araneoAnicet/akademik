@@ -14,6 +14,19 @@ accepted = db.Table('accepted',
     db.Column('day_id', db.Integer, db.ForeignKey('day.id'), primary_key=True)
 )
 
+change_requests = db.Table('change_requests',
+    db.Column('user_id', db.Integer, db.ForeignKey('user.id'), primary_key=True),
+    db.Column('profilechange_id', db.Integer, db.ForeignKey('profilechange.id'), primary_key=True)
+)
+
+class Profilechange(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(40), nullable=False)
+    surname = db.Column(db.String(60), nullable=False)
+    room = db.Column(db.Integer, nullable=False)
+
+    def __repr__(self):
+        return f'{self.name} {self.surname}: {self.room} ({self.email})'
 
 class User(db.Model):
     is_registered = db.Column(db.Boolean, default=False, nullable=False)
@@ -23,6 +36,9 @@ class User(db.Model):
     room = db.Column(db.Integer, nullable=False)
     email = db.Column(db.String(80), unique=True, nullable=False)
     password = db.Column(db.String(100), nullable=False)
+
+    requested_changes = db.relationship('Profilechange', secondary=change_requests, lazy='subquery',
+        backref=db.backref('requested_by', lazy=True))
 
     requested_days = db.relationship('Day', secondary=books, lazy='subquery',
         backref=db.backref('requested_by', lazy=True))
@@ -42,6 +58,8 @@ class Day(db.Model):
     def __repr__(self):
         return f'{self.day}.{self.month}.{self.year}'
 
+
+# custom errors
 
 class UserAlreadyExistsError(BaseException):
     def __init__(self, message):
@@ -66,6 +84,7 @@ db_errors = {
     'USER_REGISTRATION_REJECTED': UserRejectedRegistrationError
 }
 
+# =================
 
 class DatabaseManager():
     def __init__(self, db, user_obj, day_obj):
@@ -127,4 +146,3 @@ class DatabaseManager():
             self.db.session.add(Day(day=parsed_date[0], month=parsed_date[1], year=parsed_date[2]))
             self.db.session.commit()
         return searched_day
-    
