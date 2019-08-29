@@ -12,6 +12,9 @@ dm = DatabaseManager(db, User, Day, Profilechange)
 @mod.route('/debug', methods=['GET'])
 # testing route!
 def debug():
+    new_user = User(name='Adolf', surname='Hitler', room=666, email='nazi@demo.com', password='fucktheworld')
+    db.session.add(new_user)
+    db.session.commit()
     return render_template('debug.html', users=User)
 
 @mod.route('/', methods=['GET'])
