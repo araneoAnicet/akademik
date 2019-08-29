@@ -1,6 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
 from passlib.hash import sha256_crypt
-from functools import wraps
 from flaskapp import db
 
 books = db.Table('books',
@@ -78,11 +77,16 @@ class UserRejectedRegistrationError(BaseException):
     def __init__(self, message):
         super().__init__(message)
 
+class ProfilechangeDoesNotExistError(BaseException):
+    def __init__(self, message):
+        super().__init__(message)
+
 db_errors = {
     'USER_ALREADY_EXISTS': UserAlreadyExistsError,
-    'USER_DOES_NOT_EXISTS': UserDoesNotExistError,
+    'USER_DOES_NOT_EXIST': UserDoesNotExistError,
     'USER_REGISTRATION_ACCEPTED': UserAcceptedRegistrationError,
-    'USER_REGISTRATION_REJECTED': UserRejectedRegistrationError
+    'USER_REGISTRATION_REJECTED': UserRejectedRegistrationError,
+    'PROFILECHANGE_DOES_NOT_EXIST': ProfilechangeDoesNotExistError
 }
 
 # =================
@@ -111,13 +115,13 @@ class DatabaseManager():
 
     # validator
     def _user_registration_request_accepted(self, email):
-        # raises an error if user registration request has been rejected
+        # raises an error if user registration request has been accepted
         if self._user_exists(email).is_registered:
             raise UserRejectedRegistrationError('User with this e-mail has been accepted by the system')
 
     # validator
     def _not_user_registration_request_accepted(self, email):
-        # raises an error if user registration request has been accepted
+        # raises an error if user registration request has been rejected
         if not self._user_exists(email).is_registered:
             raise UserAcceptedRegistrationError('User with this e-mail has been rejected by the system')
 
@@ -141,7 +145,7 @@ class DatabaseManager():
     def get_user(self, email):
         return self._user_exists(email)
 
-    def get_unregistrated_users(self):
+    def get_unregistered_users(self):
         return self.User.query.filter_by(is_registered=False).all()
     
     def get_profilechanges(self):
