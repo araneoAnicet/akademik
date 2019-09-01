@@ -1,32 +1,66 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField
+from wtforms import StringField, PasswordField, SubmitField, IntegerField
 from wtforms.validators import Email, Length, DataRequired, EqualTo, NumberRange
 
 class RegistrationBoxForm(FlaskForm):
-    name = StringField('Name', validators=[Length(min=2, max=40), DataRequired()])
-    surname = StringField('Surname', validators=[Length(min=2, max=60), DataRequired()])
-    email = StringField('E-mail', validators=[Email(), Length(min=4, max=30), DataRequired()])
-    password = PasswordField('password', validators=[Length(min=8, max=30), DataRequired()])
-    confirm_password = PasswordField('confirm_password', validators=[Length(min=8, max=30), EqualTo('password', message='fields should be equal'), DataRequired()])
-    room = StringField('Room', validators=[DataRequired(), NumberRange(min=1, max=9999)])
-    submit = SubmitField()
+    name = StringField('name', validators=[
+        Length(min=2, max=40, message='Your name is too short or too long!'),
+        DataRequired(message='This field is required!')
+        ])
+    surname = StringField('surname', validators=[
+        Length(min=2, max=60, message='Your surname is too short or too long!'),
+        DataRequired(message='This field is required!')
+        ])
+    email = StringField('email', validators=[
+        Email(message='Does not look like an e-mail!'),
+        Length(min=4, max=30, message='Your e-mail is too short or too long!'),
+        DataRequired(message='This field is required!')
+        ])
+    password = PasswordField('password', validators=[
+        Length(min=8, max=30, message='Your password is too short or too long!'),
+        DataRequired(message='This field is required!')
+        ])
+    confirm_password = PasswordField('confirm_password', validators=[
+        EqualTo('password', message='fields should be equal'), DataRequired()
+        ])
+    room = IntegerField('room', validators=[
+        DataRequired(message='This field is required!'),
+        NumberRange(min=1, max=9999, message='Your room number is too big or too small!')])
 
 class LoginBoxForm(FlaskForm):
-    email = StringField(validators=[DataRequired(), Email(), Length(min=4, max=30)])
-    password = PasswordField(validators=[DataRequired(), Length(min=8, max=30)])
-    submit = SubmitField()
+    email = StringField('email', validators=[
+        DataRequired(message='This field is required!'),
+        Email(message='Does not look like an e-mail!'),
+        Length(min=4, max=30, message='Your e-mail is too short or too long!')
+        ])
+    password = PasswordField('password', validators=[
+        DataRequired(message='This field is required!'),
+        Length(min=8, max=30, message='Your password is too short or too long!')
+        ])
 
 class ForgotPasswordForm(FlaskForm):
-    email = StringField(validators=[DataRequired(), Email(), Length(min=4, max=30)])
-    submit = SubmitField()
+    email = StringField('email', validators=[
+        DataRequired(message='This field is required!'),
+        Email(),
+        Length(min=4, max=30)
+        ])
 
 class ChangePasswordForm(FlaskForm):
-    email = StringField(validators=[DataRequired(), Email()])
-    old_password = PasswordField(validators=[DataRequired(), Length(min=8)])
-    new_password = PasswordField(validators=[DataRequired(), Length(min=8)])
-    confirm_new_password = PasswordField(validators=[DataRequired(), EqualTo('new_password'), Length(min=8)])
+    email = StringField('email', validators=[
+        DataRequired(message='This field is required!'),
+        Email()])
+    old_password = PasswordField('password', validators=[
+        DataRequired(message='This field is required!'),
+        Length(min=8)])
+    new_password = PasswordField('new_password', validators=[
+        DataRequired(message='This field is required!'),
+        Length(min=8)])
+    confirm_new_password = PasswordField('confirm_password', validators=[
+        DataRequired(message='This field is required!'),
+        EqualTo('new_password'),
+        Length(min=8)])
 
 class ProfileSettingsForm(FlaskForm):
-    name = StringField(validators=[Length(min=2, max=40)])
-    surname = StringField(validators=[Length(min=2, max=60)])
-    room = StringField(validators=[NumberRange(min=1, max=9999)])
+    name = StringField('name', validators=[Length(min=2, max=40)])
+    surname = StringField('surname', validators=[Length(min=2, max=60)])
+    room = IntegerField('room', validators=[NumberRange(min=1, max=9999)])

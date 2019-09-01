@@ -4,15 +4,22 @@
 {% endblock %}
 
 {% block content %}
-<form class="centred-box" action="{{ url_for('site.registration') }}" method="POST">
+<form class="centred-box" action="{{ url_for('site.sign_in') }}" method="POST">
+    {{ form.hidden_tag() }}
     <div class="reg-grid">
         <div class="form-group reg-grid-element">
             <label>e-mail</label>
             {{ form.email(class="form-control", placeholder="remember your e-mail?") }}
+            {% if form.email.errors %}
+                <ul>{% for error in form.email.errors %} <li>{{ error }}}</li> {% endfor %}</ul>
+            {% endif %}
         </div>
         <div class="form-group reg-grid-element">
             <label>password</label>
             {{ form.password(class="form-control", placeholder="don't forget the password") }}
+            {% if form.password.errors %}
+                <ul>{% for error in form.password.errors %} <li>{{ error }}}</li> {% endfor %}</ul>
+            {% endif %}
         </div>
     </div>
     <div class="form-group">
@@ -20,6 +27,16 @@
             <button type="button" class="btn btn-primary" onclick="location.href='{{ url_for('site.registration') }}';">I have no account</button>
             <button type="button" class="btn btn-primary" onclick="location.href='{{ url_for('site.change_password') }}';">I forgot my password</button>
         </div>
-    
+        
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }}" role="alert">        
+                    {{ message }}
+                </div>
+            {% endfor %}
+            
+        {% endif %}
+        {% endwith %}
 </form>
 {% endblock %}

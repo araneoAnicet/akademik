@@ -84,8 +84,8 @@ class ProfilechangeDoesNotExistError(BaseException):
 db_errors = {
     'USER_ALREADY_EXISTS': UserAlreadyExistsError,
     'USER_DOES_NOT_EXIST': UserDoesNotExistError,
-    'USER_REGISTRATION_ACCEPTED': UserAcceptedRegistrationError,
-    'USER_REGISTRATION_REJECTED': UserRejectedRegistrationError,
+    'USER_REGISTRATION_REJECTED': UserAcceptedRegistrationError,
+    'USER_REGISTRATION_ACCEPTED': UserRejectedRegistrationError,
     'PROFILECHANGE_DOES_NOT_EXIST': ProfilechangeDoesNotExistError
 }
 
@@ -116,14 +116,18 @@ class DatabaseManager():
     # validator
     def _user_registration_request_accepted(self, email):
         # raises an error if user registration request has been accepted
-        if self._user_exists(email).is_registered:
+        user = self._user_exists(email)
+        if user.is_registered:
             raise UserRejectedRegistrationError('User with this e-mail has been accepted by the system')
+        return user
 
     # validator
     def _not_user_registration_request_accepted(self, email):
         # raises an error if user registration request has been rejected
-        if not self._user_exists(email).is_registered:
+        user = self._user_exists(email)
+        if not user.is_registered:
             raise UserAcceptedRegistrationError('User with this e-mail has been rejected by the system')
+        return user
 
     def _password_encrypt(self, password):
         return sha256_crypt.encrypt(password)
@@ -139,7 +143,7 @@ class DatabaseManager():
         self.db.session.commit()
 
     def user_sign_in(self, email, password):
-        searched_user = self._user_exists(email)
+        searched_user = self._not_user_registration_request_accepted(email)
         return self._password_verify(searched_user, password)
 
     def get_user(self, email):

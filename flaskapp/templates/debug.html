@@ -2,13 +2,7 @@
 
 {% block content %}
 
-    <ul>
-        {% for user in users.query.all() %}
-        <li>
-            <h1>{{ user.name }} {{ user.surname }}</h1>
-            <h1>{{ user.room }}</h1>
-        </li>
-        {% endfor %}
-    </ul>
-
+    {% if message %}
+        <h1>{{ message }}</h1>
+    {% endif %}
 {% endblock %}
