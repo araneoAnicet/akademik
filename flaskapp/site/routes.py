@@ -1,8 +1,9 @@
-from flask import render_template, redirect, flash, url_for, request, Blueprint
+from flask import render_template, redirect, flash, url_for, request, Blueprint, session, g
 from flaskapp import db
 from flaskapp.config import flash_categories
 from flaskapp.models import DatabaseManager, User, Day, Profilechange, db_errors
 from flaskapp.site.forms import LoginBoxForm, ChangePasswordForm, ForgotPasswordForm, RegistrationBoxForm
+from functools import wraps
 
 
 mod = Blueprint('site', __name__)
@@ -10,15 +11,34 @@ mod = Blueprint('site', __name__)
 
 dm = DatabaseManager(db, User, Day, Profilechange)
 
-@mod.route('/debug', methods=['GET'])
+def requires_session(func):
+    @wraps(func)
+    def wrapper(*args, **kwds):
+        if not g.email:
+            return render_template('not_signed_in.html')
+        return func(*args, **kwds)
+    return wrapper
+
+
+@mod.before_request
+def before_request():
+    g.email = None
+    if 'email' in session:
+        g.email = session['email']
+
+
+@mod.route('/debug/drop', methods=['GET'])
 # testing route!
 def debug():
     # drops the data
+    if 'email' in session:
+        session.pop('email', None)
     db.drop_all()
     db.create_all()
     return render_template('debug.html', message='The database has been cleaned successfully!')
 
 @mod.route('/', methods=['GET'])
+@requires_session
 def index():
     return render_template('index.html')
 
@@ -57,6 +77,7 @@ def sign_in():
     if form.validate_on_submit():
         try:
             if dm.user_sign_in(form.data['email'], form.data['password']):
+                session['email'] = form.data['email']
                 return redirect(url_for('site.index'))
             flash('Incorrect e-mail or password', flash_categories['error'])
             return redirect(url_for('site.sign_in'))
