@@ -14,7 +14,7 @@ dm = DatabaseManager(db, User, Day, Profilechange)
 def requires_session(func):
     @wraps(func)
     def wrapper(*args, **kwds):
-        if not g.email:
+        if not g.email or not g.password:
             return render_template('not_signed_in.html')
         return func(*args, **kwds)
     return wrapper
@@ -23,8 +23,11 @@ def requires_session(func):
 @mod.before_request
 def before_request():
     g.email = None
+    g.password = None
     if 'email' in session:
         g.email = session['email']
+    if 'password' in session:
+        g.password = session['password']
 
 
 @mod.route('/debug/drop', methods=['GET'])
@@ -33,6 +36,8 @@ def debug():
     # drops the data
     if 'email' in session:
         session.pop('email', None)
+    if 'password' in session:
+        session.pop('password', None)
     db.drop_all()
     db.create_all()
     return render_template('debug.html', message='The database has been cleaned successfully!')
@@ -78,6 +83,7 @@ def sign_in():
         try:
             if dm.user_sign_in(form.data['email'], form.data['password']):
                 session['email'] = form.data['email']
+                session['password'] = form.data['password']
                 return redirect(url_for('site.index'))
             flash('Incorrect e-mail or password', flash_categories['error'])
             return redirect(url_for('site.sign_in'))

@@ -28,6 +28,7 @@ class Profilechange(db.Model):
         return f'{self.name} {self.surname}: {self.room} ({self.email})'
 
 class User(db.Model):
+    is_admin = db.Column(db.Boolean, default=False, nullable=False)
     is_registered = db.Column(db.Boolean, default=False, nullable=False)
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(40), nullable=False)
@@ -118,7 +119,7 @@ class DatabaseManager():
         # raises an error if user registration request has been accepted
         user = self._user_exists(email)
         if user.is_registered:
-            raise UserRejectedRegistrationError('User with this e-mail has been accepted by the system')
+            raise UserRejectedRegistrationError('User with this e-mail has been accepted')
         return user
 
     # validator
@@ -126,7 +127,7 @@ class DatabaseManager():
         # raises an error if user registration request has been rejected
         user = self._user_exists(email)
         if not user.is_registered:
-            raise UserAcceptedRegistrationError('User with this e-mail has been rejected by the system')
+            raise UserAcceptedRegistrationError('User with this e-mail is not accepted')
         return user
 
     def _password_encrypt(self, password):
@@ -148,6 +149,11 @@ class DatabaseManager():
 
     def get_user(self, email):
         return self._user_exists(email)
+
+    def make_admin(self, email):
+        user = self._not_user_registration_request_accepted(email)
+        user.is_admin = True
+        self.db.session.commit()
 
     def get_unregistered_users(self):
         return self.User.query.filter_by(is_registered=False).all()

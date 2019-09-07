@@ -1,6 +1,9 @@
-from flask import Blueprint, request, Response, jsonify
+from flask import Blueprint, request, Response, jsonify, current_app
 from flaskapp import db
-from flaskapp.models import DatabaseManager, User, Day, Profilechange
+from flaskapp.models import DatabaseManager, User, Day, Profilechange, db_errors
+import jwt
+from jwt import ExpiredSignatureError, InvalidTokenError
+
 
 dm = DatabaseManager(db, User, Day, Profilechange)
 
@@ -22,6 +25,62 @@ def response_format(
         }
     }), status
 
+
+@mod.route('/get_api_token', methods=['POST', 'GET'])
+def get_token():
+    email = request.headers['email']
+    password = request.headers['password']
+    if email and password:
+        try:
+            user = dm.user_sign_in(email, password)
+            if user and user.is_admin:
+                return response_format(
+                    data={
+                        'token': jwt.encode(
+                            {
+                                'email': email,
+                                'is_admin': True,
+                                'exp': datetime.utcnow() + current_app.config['JWT_EXPIRATION']
+                                },
+                                current_app.config['SECRET_KEY'],
+                                'HS256'
+                            )
+                    }
+                )
+            return response_format(
+                message='Incorrect e-mail or password',
+                status=401
+            )
+        except:
+            return response_format(
+                message='Incorrect e-mail or password',
+                status=401
+            )
+    return response_format(
+        message='E-mail or password are missing',
+        status=401
+        )
+
+@mod.route('/check_token')
+def check_token():
+    token = request.headers['Authorization']
+    if token:
+        try:
+            jwt.decode(token, current_app.config['SECRET_KEY'])
+        except ExpiredSignatureError:
+            return response_format(
+                message='Expired token',
+                status=401
+            )
+        except InvalidTokenError:
+            return response_format(
+                message='Invalid token',
+                status=401
+            )
+    return response_format(
+        message='Token is missing',
+        status=401
+    )
 
 @mod.route('/get_unregistered_users', methods=['GET'])
 def get_users():
