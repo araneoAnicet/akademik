@@ -2,7 +2,7 @@ from flask import render_template, redirect, flash, url_for, request, Blueprint,
 from flaskapp import db
 from flaskapp.config import flash_categories
 from flaskapp.models import DatabaseManager, User, Day, Profilechange, db_errors
-from flaskapp.site.forms import LoginBoxForm, ChangePasswordForm, ForgotPasswordForm, RegistrationBoxForm
+from flaskapp.site.forms import LoginBoxForm, ChangePasswordForm, ForgotPasswordForm, RegistrationBoxForm, AdminForm
 from functools import wraps
 
 
@@ -104,4 +104,7 @@ def change_password():
 
 @mod.route('/admin')
 def admin():
-    return render_template('admin.html')
+    form = AdminForm()
+    if form.validate_on_submit():
+        print('Gotcha!')
+    return render_template('admin.html', form=form)

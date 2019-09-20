@@ -1,83 +1,136 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="top">
-    <h1>admin page...</h1>
-</div>
-
-
-<div class="card text-center">
-    <div class="card-header">
-      <ul class="nav nav-tabs card-header-tabs">
-        <li class="nav-item">
-          <a class="nav-link" href="#">days</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">registrations</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#" tabindex="-1" aria-disabled="true">profile changes</a>
-        </li>
-      </ul>
-    </div>
-    <div class="card-body">
-      
-        <!--
-            Here is the table
-        -->
-          
-
-
-<table class="table">
-    <thead class="thead-dark">
-      <tr>
-        <th scope="col">№</th>
-        <th scope="col">Status</th>
-        <th scope="col">Name & Surname</th>
-        <th scope="col">Room</th>
-        <th scope="col">Day</th>
-        <th scope="col">commit</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <th scope="row">1</th>
-        <th class="btn-outline-success">New!</th>
-        <td>Mark Otto</td>
-        <td>712</td>
-        <td>18.11.2019</td>
-        <td class="btn-group">
-                <button class="btn btn-outline-success">accept</button>
-                <button class="btn btn-outline-danger">reject</button>
-        </td>
-      </tr>
-      <tr>
-        <th scope="row">2</th>
-        <th class="btn-outline-success">New!</th>
-        <td>Jacob Thornton</td>
-        <td>702</td>
-        <td>13.11.2019</td>
-        <td class="btn-group">
-            <button class="btn btn-outline-success">accept</button>
-            <button class="btn btn-outline-danger">reject</button>
-    </td>
-      </tr>
-      <tr>
-        <th scope="row">3</th>
-        <th class="btn-outline-info">Still waiting...</th>
-        <td>Larry Bird</td>
-        <td>707</td>
-        <td>13.11.2019</td>
-        <td class="btn-group">
-            <button class="btn btn-outline-success">accept</button>
-            <button class="btn btn-outline-danger">reject</button>
-    </td>
-      </tr>
-    </tbody>
-  </table>
-        <!--
-            Here it ends
-        -->
-    </div>
+<div id="app">
+  
+  <div v-show="processing_ajax" class="centred-box" style="text-align: center;">
+    <h3>[[ ajax_processing_message ]]</h3>
+    <div class="spinner-grow" role="status">
+        <span class="sr-only">Loading...</span>
+      </div>
   </div>
+  
+  <form v-if="!processing_ajax" class="centred-box" action="{{ url_for('site.sign_in') }}" method="POST">
+      {{ form.hidden_tag() }}
+      <h1>
+        admin login page
+      </h1>
+      <p>once you sign in, your token will be stored</p>
+      <div class="reg-grid">
+          <div class="form-group reg-grid-element">
+              <label>e-mail</label>
+              {{ form.email(ref="admin_email", class="form-control", placeholder="remember your e-mail?") }}
+              {% if form.email.errors %}
+                  <ul>{% for error in form.email.errors %} <li>{{ error }}}</li> {% endfor %}</ul>
+              {% endif %}
+          </div>
+          <div class="form-group reg-grid-element">
+              <label>password</label>
+              {{ form.password(ref="admin_password", class="form-control", placeholder="don't forget the password") }}
+              {% if form.password.errors %}
+                  <ul>{% for error in form.password.errors %} <li>{{ error }}}</li> {% endfor %}</ul>
+              {% endif %}
+          </div>
+      </div>
+      <div class="form-group">
+              <button class="btn btn-success" @click.prevent="getFormData()">sign in!!</button>
+              <button type="button" class="btn btn-danger" onclick="location.href='{{ url_for('site.registration') }}';">Oups, I'm not admin</button>
+          </div>
+          
+          {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+              {% for category, message in messages %}
+                  <div class="alert alert-{{ category }}" role="alert">        
+                      {{ message }}
+                  </div>
+              {% endfor %}
+              
+          {% endif %}
+          {% endwith %}
+          <transition name="fade">
+          <div v-if="server_message" class="alert alert-danger" role="alert">
+              [[ server_message ]]
+            </div>
+          </transition>
+  </form>
+
+<div class="popup-window" v-if="show_login_window"></div>
+  <div class="card text-center">
+      <div class="card-header">
+        <ul class="nav nav-tabs card-header-tabs">
+          <li class="nav-item">
+            <a class="nav-link" href="#">days</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">registrations</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#" tabindex="-1" aria-disabled="true">profile changes</a>
+          </li>
+        </ul>
+      </div>
+      <div class="card-body">
+        
+          <!--
+              Here is the table
+          -->
+            
+
+
+  <table class="table">
+      <thead class="thead-dark">
+        <tr>
+          <th scope="col">№</th>
+          <th scope="col">Status</th>
+          <th scope="col">Name & Surname</th>
+          <th scope="col">Room</th>
+          <th scope="col">Day</th>
+          <th scope="col">commit</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th scope="row">1</th>
+          <th class="btn-outline-success">New!</th>
+          <td>Mark Otto</td>
+          <td>712</td>
+          <td>18.11.2019</td>
+          <td class="btn-group">
+                  <button class="btn btn-outline-success">accept</button>
+                  <button class="btn btn-outline-danger">reject</button>
+          </td>
+        </tr>
+        <tr>
+          <th scope="row">2</th>
+          <th class="btn-outline-success">New!</th>
+          <td>Jacob Thornton</td>
+          <td>702</td>
+          <td>13.11.2019</td>
+          <td class="btn-group">
+              <button class="btn btn-outline-success">accept</button>
+              <button class="btn btn-outline-danger">reject</button>
+      </td>
+        </tr>
+        <tr>
+          <th scope="row">3</th>
+          <th class="btn-outline-info">Still waiting...</th>
+          <td>Larry Bird</td>
+          <td>707</td>
+          <td>13.11.2019</td>
+          <td class="btn-group">
+              <button class="btn btn-outline-success">accept</button>
+              <button class="btn btn-outline-danger">reject</button>
+      </td>
+        </tr>
+      </tbody>
+    </table>
+          <!--
+              Here it ends
+          -->
+      </div>
+    </div>
+    <h1> [[ admin_token ]] </h1>
+</div>
+  <script type="module" src="../static/js/admin.js"></script>
+  
 {% endblock %}

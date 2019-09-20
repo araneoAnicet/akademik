@@ -67,6 +67,10 @@ def check_token():
     if token:
         try:
             jwt.decode(token, current_app.config['SECRET_KEY'])
+            return response_format(
+                message='Your token is verified successfully!',
+                status=200
+            )
         except ExpiredSignatureError:
             return response_format(
                 message='Expired token',

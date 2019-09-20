@@ -1,11 +1,11 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-from flask_bootstrap import Bootstrap
+from flask_cors import CORS
 from datetime import timedelta
 
 
 app = Flask(__name__)
-Bootstrap(app)
+CORS(app)
 db = SQLAlchemy()
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True

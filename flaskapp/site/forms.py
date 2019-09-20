@@ -60,6 +60,17 @@ class ChangePasswordForm(FlaskForm):
         EqualTo('new_password'),
         Length(min=8)])
 
+class AdminForm(FlaskForm):
+    email = StringField('email', validators=[
+    DataRequired(message='This field is required!'),
+    Email(message='Does not look like an e-mail!'),
+    Length(min=4, max=30, message='Your e-mail is too short or too long!')
+    ])
+    password = PasswordField('password', validators=[
+        DataRequired(message='This field is required!'),
+        Length(min=8, max=30, message='Your password is too short or too long!')
+        ])
+
 class ProfileSettingsForm(FlaskForm):
     name = StringField('name', validators=[Length(min=2, max=40)])
     surname = StringField('surname', validators=[Length(min=2, max=60)])
