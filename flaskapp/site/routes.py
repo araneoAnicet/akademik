@@ -68,6 +68,8 @@ def admins_control():
                 flash(f"Looks like user with e-mail {form.data['email']} already exists!", flash_categories['error'])
             flash(f"New admin {form.data['email']} has been created", flash_categories['success'])
             return redirect(url_for('admins_control'))
+        flash('Invalid secret key!', flash_categories['error'])
+        return redirect(url_for('admins_control'))
     return render_template('admins_control.html', form=form)
 
 
