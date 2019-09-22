@@ -165,6 +165,7 @@ class DatabaseManager():
         if self._user_exists(email):
             self.db.session.remove(self.User.query.filter_by(email=email).first())
             self.db.session.commit()
+        return False
 
     def make_admin(self, email):
         user = self._not_user_registration_request_accepted(email)
