@@ -28,8 +28,11 @@ def response_format(
 
 @mod.route('/get_api_token', methods=['POST', 'GET'])
 def get_token():
-    email = request.headers['email']
-    password = request.headers['password']
+    try:
+        email = request.headers['email']
+        password = request.headers['password']
+    except KeyError:
+        email, password = None, None
     if email and password:
         try:
             user = dm.user_sign_in(email, password)

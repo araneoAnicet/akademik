@@ -28,7 +28,7 @@ class Profilechange(db.Model):
         return f'{self.name} {self.surname}: {self.room} ({self.email})'
 
 class User(db.Model):
-    is_admin = db.Column(db.Boolean, default=False, nullable=False)
+    is_admin = db.Column(db.Boolean, default=False, nullable=True)
     is_registered = db.Column(db.Boolean, default=False, nullable=False)
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(40), nullable=False)
