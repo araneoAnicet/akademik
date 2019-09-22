@@ -99,6 +99,17 @@ def get_users():
         ))
     })
 
+@mod.route('/get_admins', methods=['GET'])
+def get_admins():
+    return response_format(
+        message="all admins' e-mails are listed",
+        data={
+            'admins': [
+                admin.email for admin in dm.get_admins()
+            ]
+        }
+    )
+
 @mod.route('/accept_user_registration/<email>', methods=['PUT'])
 def accept_registration(email):
     searched_user = dm.get_user(email)
