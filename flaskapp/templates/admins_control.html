@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+<form class="centred-box" action="{{ url_for('site.admins_control') }}" method="POST">
+    {{ form.hidden_tag() }}
+    <h1>admins control page (create or delete admins)</h1>
+    <div class="reg-grid">
+        
+            <div class="form-group reg-grid-element">
+                    <label>admin's e-mail</label>
+                    {{ form.email(class="form-control", placeholder="email here") }}
+                    {% if form.email.erros %}
+                        <ul>{% for error in form.email.erros %} <li>{{ error }}</li> {% endfor %}</ul>
+                    {% endif %}
+                    
+                </div>
+            <div class="form-group reg-grid-element">
+                    <label>password</label>
+                    {{ form.password(class="form-control", placeholder="This field is only required if you want to create new admin") }}
+                    {% if form.password.erros %}
+                        <ul>{% for error in form.password.erros %} <li>{{ error }}</li> {% endfor %}</ul>
+                    {% endif %}
+                    
+                </div>
+            <div class="form-group reg-grid-element">
+                    <label>control key</label>
+                    {{ form.control_key(class="form-control", placeholder="enter your secret key") }}
+                    {% if form.control_key.erros %}
+                        <ul>{% for error in form.control_key.erros %} <li>{{ error }}</li> {% endfor %}</ul>
+                    {% endif %}
+                    
+                </div>
+                <div class="form-group reg-grid-element">
+
+                </div>
+            <div class="form-group reg-grid-element">
+                {{ form.isDeletingAdmin() }}
+            <label class="form-check-label">want to delete the admin?</label>
+            </div>
+    </div>
+    <div class="form-group">
+            <button type="submit" class="btn btn-success">create!</button>
+            <button type="button" class="btn btn-primary" onclick="location.href='{{ url_for('site.sign_in') }}';">
+                I don't think I'm supposed to be here
+            </button>
+            </div>
+    
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}" role="alert">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            
+            {% endif %}
+        {% endwith %}
+</form>
+{% endblock %}

@@ -11,6 +11,7 @@ db = SQLAlchemy()
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 app.config['SECRET_KEY'] = 'APP_SECRET_KEY'
+app.config['ADMINS_CONTROL_KEY'] = 'APP_ADMINS_CONTROL_KEY'
 app.config['JWT_EXPIRATION'] = timedelta(weeks=4) 
 
 db.init_app(app)

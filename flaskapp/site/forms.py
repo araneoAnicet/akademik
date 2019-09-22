@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, IntegerField
+from wtforms import StringField, PasswordField, SubmitField, IntegerField, BooleanField
 from wtforms.validators import Email, Length, DataRequired, EqualTo, NumberRange
 
 class RegistrationBoxForm(FlaskForm):
@@ -75,3 +75,17 @@ class ProfileSettingsForm(FlaskForm):
     name = StringField('name', validators=[Length(min=2, max=40)])
     surname = StringField('surname', validators=[Length(min=2, max=60)])
     room = IntegerField('room', validators=[NumberRange(min=1, max=9999)])
+
+class SecretKeyForm(FlaskForm):
+    email = StringField('email', validators=[
+        DataRequired(message='This field is required!'),
+        Email(message='Does not look like an e-mail!'),
+        Length(min=4, max=30, message='This e-mail is too short or too long!')
+    ])
+    password = PasswordField('password', validators=[
+        Length(min=8, max=30, message='Your password is too short or too long!')
+    ])
+    control_key = PasswordField('key', validators=[
+        DataRequired(message="Don't you think you can not to fill this out?")
+    ])
+    isDeletingAdmin = BooleanField('isDeletingAdmin')
