@@ -57,8 +57,15 @@ def admins_control():
     if form.validate_on_submit():
         if form.data['key'] == current_app.config['ADMINS_CONTROL_KEY']:
             if form.data['isDeletingAdmin']:
-                flash(f"Admin {form.data['email']} has been removed!", flash_categories['success'])
+                if dm.remove_user(form.data['email']):
+                    flash(f"Admin {form.data['email']} has been removed!", flash_categories['success'])
+                    return redirect(url_for('admins_control'))
+                flash(f"There's no account with {form.data['email']} e-mail!", flash_categories['error'])
                 return redirect(url_for('admins_control'))
+            try:
+                dm.admin_registration(form.data['email'], form.data['password'])
+            except db_errors['USER_ALREADY_EXISTS']:
+                flash(f"Looks like user with e-mail {form.data['email']} already exists!", flash_categories['error'])
             flash(f"New admin {form.data['email']} has been created", flash_categories['success'])
             return redirect(url_for('admins_control'))
     return render_template('admins_control.html', form=form)
