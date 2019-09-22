@@ -66,6 +66,7 @@ def admins_control():
                 dm.admin_registration(form.data['email'], form.data['password'])
             except db_errors['USER_ALREADY_EXISTS']:
                 flash(f"Looks like user with e-mail {form.data['email']} already exists!", flash_categories['error'])
+                return redirect(url_for('admins_control'))
             flash(f"New admin {form.data['email']} has been created", flash_categories['success'])
             return redirect(url_for('admins_control'))
         flash('Invalid secret key!', flash_categories['error'])
