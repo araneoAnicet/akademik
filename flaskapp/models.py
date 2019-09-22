@@ -142,6 +142,17 @@ class DatabaseManager():
         new_user = self.User(name=name, surname=surname, email=email, password=encrypted_password, room=room)
         self.db.session.add(new_user)
         self.db.session.commit()
+    
+    def admin_registration(self, email, password):
+        self._not_user_exists(email)
+        encrypted_password = self._password_encrypt(password)
+        new_user = self.User(name='None', surname='None', email=email, password=encrypted_password, room=0)
+        new_user.is_admin = True
+        self.db.session.add(new_user)
+        self.db.session.commit()
+
+    def get_admins(self):
+        return self.User.query.filter_by(is_admin=True).all()
 
     def user_sign_in(self, email, password):
         searched_user = self._not_user_registration_request_accepted(email)
