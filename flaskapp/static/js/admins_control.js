@@ -13,30 +13,12 @@ new Vue({
         admins_list: []
     },
     methods: {
-        getAdmins: function () {
-            fetch('http://localhost:5000/api/get_admins', {
-                method: 'GET'
-            }).then(
-                response => response.json()
-            ).then((data) => {
-                if (data.data != null) {
-                    
-                    this.admins_list = data.data.admins;
-                    this.ajax_request_is_successfull = true;
-                }
-                this.ajax_request_is_successfull = false;
-    
-            })
-        },
-
         adminsShowButton: function () {
             if (this.is_showing_admins_list) {
                 this.show_admins_button_text = 'show admins';
                 this.is_showing_admins_list = false;
             } else {
                 this.processing_ajax = true;
-                // this.getAdmins();
-                
                 fetch('http://localhost:5000/api/get_admins', {
                     method: 'GET'
                 }).then(
