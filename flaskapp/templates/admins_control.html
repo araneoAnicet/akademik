@@ -53,6 +53,7 @@
             <transition name="fade">
             <div v-if="is_showing_admins_list" v-bind:class="[[ admins_list_style_class ]]" role="alert">
                 <h1>admins</h1>
+                <hr>
                 <li v-for="(email, index) in admins_list">
                     [[ index + 1 ]].     [[ email ]]
                 </li>
