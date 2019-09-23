@@ -2,6 +2,7 @@
 
 
 {% block content %}
+<div id="app">
 <form class="centred-box" action="{{ url_for('site.admins_control') }}" method="POST">
     {{ form.hidden_tag() }}
     <h1>admins control page (create or delete admins)</h1>
@@ -35,16 +36,28 @@
 
                 </div>
             <div class="form-group reg-grid-element">
-                {{ form.isDeletingAdmin() }}
+                {{ form.isDeletingAdmin(ref='isDeletingAdmin') }}
             <label class="form-check-label">want to delete the admin?</label>
             </div>
     </div>
     <div class="form-group">
-            <button type="submit" class="btn btn-success">create!</button>
+            <button type="submit" ref="main_button" class="btn btn-success">commit</button>
             <button type="button" class="btn btn-primary" onclick="location.href='{{ url_for('site.sign_in') }}';">
                 I don't think I'm supposed to be here
             </button>
+            <button type="button" class="btn btn-secondary" @click.prevent="adminsShowButton()"> [[ show_admins_button_text ]] </button>
+            <div v-if="processing_ajax" class="spinner-grow" role="status">
+                <span class="sr-only">Loading...</span>
+              </div>
             </div>
+            <transition name="fade">
+            <div v-if="is_showing_admins_list" v-bind:class="[[ admins_list_style_class ]]" role="alert">
+                <h1>admins</h1>
+                <li v-for="(email, index) in admins_list">
+                    [[ index + 1 ]].     [[ email ]]
+                </li>
+              </div>
+            </transition>
     
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
@@ -57,4 +70,6 @@
             {% endif %}
         {% endwith %}
 </form>
+</div>
+<script type="module" src="../static/js/admins_control.js"></script>
 {% endblock %}
