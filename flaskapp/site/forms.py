@@ -83,7 +83,7 @@ class SecretKeyForm(FlaskForm):
         Length(min=4, max=30, message='This e-mail is too short or too long!')
     ])
     password = PasswordField('password', validators=[
-        Length(min=8, max=30, message='Your password is too short or too long!')
+        Length(max=30, message='Your password is too short or too long!')
     ])
     control_key = PasswordField('key', validators=[
         DataRequired(message="Don't you think you can not to fill this out?")
