@@ -16,11 +16,7 @@ new Vue({
     mounted () {
         if (localStorage.admin_token) {
             this.ajax_processing_message = 'Verifying admin token...';
-            if (this.checkTokenStatus()) {
-                this.admin_token = localStorage.admin_token;
-            } else {
-                localStorage.admin_token = '';
-            }
+            this.checkTokenStatus();
         }
 
         if (localStorage.admin_email) {
@@ -35,15 +31,7 @@ new Vue({
             this.processing_ajax = true;
             this.admin_email = this.$refs.admin_email.value;
             localStorage.admin_email = this.admin_email;
-            
-            if (this.getToken()) {
-                this.processing_ajax = false;
-                this.show_login_window = false;
-                localStorage.admin_token = this.admin_token;
-            } else {
-                this.processing_ajax = false;
-            }
-            
+            this.getToken()
         },
 
         getToken: function () {
@@ -57,23 +45,29 @@ new Vue({
                 this.server_message = data.message;
                 if (data.data != null) {
                     this.admin_token = data.data.token;
-                    return true;
+                    this.processing_ajax = false;
+                    this.show_login_window = false;
+                    localStorage.admin_token = this.admin_token;
                 }
-                return false;
+                this.processing_ajax = false;
             })
         },
 
         checkTokenStatus: function () {
-            fetch('http://localhost:5000/api/check_token/', {
-                method: 'POST',
+            this.processing_ajax = true;
+            fetch('http://localhost:5000/api/check_token', {
+                method: 'GET',
                 headers: {
                     'Authorization': localStorage.admin_token
                 }
             }).then(response => response.json()).then((data) => {
-                if (datalstatus == 200) {
-                    return true;
+                this.processing_ajax = false;
+                if (data.status == 200) {
+                    this.admin_token = localStorage.admin_token;
+                    this.show_login_window = false;
+                } else {
+                    localStorage.admin_token = '';
                 }
-                return false;
             })
         }
     }

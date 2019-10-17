@@ -10,7 +10,7 @@
       </div>
   </div>
   
-  <form v-if="!processing_ajax" class="centred-box" action="{{ url_for('site.sign_in') }}" method="POST">
+  <form v-show="!processing_ajax && show_login_window" class="centred-box" action="{{ url_for('site.sign_in') }}" method="POST">
       {{ form.hidden_tag() }}
       <h1>
         admin login page
@@ -55,6 +55,7 @@
   </form>
 
 <div class="popup-window" v-if="show_login_window"></div>
+<h1 style="text-align: center;">admin page</h1>
   <div class="card text-center">
       <div class="card-header">
         <ul class="nav nav-tabs card-header-tabs">
@@ -129,7 +130,6 @@
           -->
       </div>
     </div>
-    <h1> [[ admin_token ]] </h1>
 </div>
   <script type="module" src="../static/js/admin.js"></script>
   

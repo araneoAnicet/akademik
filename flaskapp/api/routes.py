@@ -65,7 +65,7 @@ def get_token():
         status=401
         )
 
-@mod.route('/check_token')
+@mod.route('/check_token', methods=['GET'])
 def check_token():
     token = request.headers['Authorization']
     if token:
