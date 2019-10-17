@@ -3,6 +3,7 @@ from flaskapp import db
 from flaskapp.models import DatabaseManager, User, Day, Profilechange, db_errors
 import jwt
 from jwt import ExpiredSignatureError, InvalidTokenError
+from datetime import datetime
 
 
 dm = DatabaseManager(db, User, Day, Profilechange)
@@ -35,8 +36,9 @@ def get_token():
         email, password = None, None
     if email and password:
         try:
-            user = dm.user_sign_in(email, password)
-            if user and user.is_admin:
+            is_signed_in = dm.user_sign_in(email, password)
+            user = dm.get_user(email)
+            if is_signed_in and user.is_admin:
                 return response_format(
                     data={
                         'token': jwt.encode(
@@ -45,8 +47,7 @@ def get_token():
                                 'is_admin': True,
                                 'exp': datetime.utcnow() + current_app.config['JWT_EXPIRATION']
                                 },
-                                current_app.config['SECRET_KEY'],
-                                'HS256'
+                                current_app.config['SECRET_KEY']
                             )
                     }
                 )

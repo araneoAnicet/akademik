@@ -148,6 +148,7 @@ class DatabaseManager():
         encrypted_password = self._password_encrypt(password)
         new_user = self.User(name='None', surname='None', email=email, password=encrypted_password, room=0)
         new_user.is_admin = True
+        new_user.is_registered = True
         self.db.session.add(new_user)
         self.db.session.commit()
 
