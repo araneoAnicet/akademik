@@ -70,11 +70,24 @@ def check_token():
     token = request.headers['Authorization']
     if token:
         try:
-            jwt.decode(token, current_app.config['SECRET_KEY'])
-            return response_format(
-                message='Your token is verified successfully!',
-                status=200
-            )
+            decoded_jwt = jwt.decode(token, current_app.config['SECRET_KEY'])
+            try:
+                dm.get_user(decoded_jwt['email'])  # continue here
+                return response_format(
+                    message='Your token is verified successfully!',
+                    status=200
+                )
+            except db_errors['USER_DOES_NOT_EXIST']:
+                return response_format(
+                    message='User has been deleted',
+                    status=410,
+                    data={
+                        'user': {
+                            'email': decoded_jwt['email'],
+                            'is_admin': True
+                        }
+                    } 
+                )
         except ExpiredSignatureError:
             return response_format(
                 message='Expired token',

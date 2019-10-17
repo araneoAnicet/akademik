@@ -61,6 +61,7 @@ new Vue({
                     'Authorization': localStorage.admin_token
                 }
             }).then(response => response.json()).then((data) => {
+                this.server_message = data.message;
                 this.processing_ajax = false;
                 if (data.status == 200) {
                     this.admin_token = localStorage.admin_token;
