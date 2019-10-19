@@ -59,6 +59,7 @@ new Vue({
                     localStorage.admin_token = this.admin_token;
                 }
                 this.processing_ajax = false;
+                this.getRegistrations();
             })
         },
 
