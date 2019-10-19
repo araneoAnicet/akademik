@@ -20,6 +20,8 @@ change_requests = db.Table('change_requests',
 )
 
 class Profilechange(db.Model):
+    request_date = db.Column(db.DateTime, default=datetime.utcnow())
+    changes = db.Column(db.String(120), nullable=False)
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(40), nullable=False)
     surname = db.Column(db.String(60), nullable=False)

@@ -72,9 +72,9 @@ def check_token():
         try:
             decoded_jwt = jwt.decode(token, current_app.config['SECRET_KEY'])
             try:
-                dm.get_user(decoded_jwt['email'])  # continue here
+                dm.get_user(decoded_jwt['email'])
                 return response_format(
-                    message='Your token is verified successfully!',
+                    message='Your token has been verified successfully!',
                     status=200
                 )
             except db_errors['USER_DOES_NOT_EXIST']:
@@ -162,7 +162,15 @@ def accept_registration(email):
 def get_profilechanges():
     return response_format(
         data={
-            list(map(lambda change: 
+            'parameters': [
+                '№',
+                'Name & Surname',
+                'Room',
+                'Date',
+                'Changes',
+                'Commit'
+            ],
+            'changes': list(map(lambda change: 
                 {'change': {
                     'user': {
                         'name': change.requested_by[0].name,
@@ -176,7 +184,16 @@ def get_profilechanges():
                         'room': change.room,
                     }
                 }}, dm.get_profilechanges()
-            ))
+            )),
+            'iterable': [
+                [
+                    index + 1,
+                    change.requested_by.name + ' ' + change.requested_by.surname,
+                    change.requested_by.room,
+                    change.request_date,
+                    change.name + ' ' + change.surname + ': ' + change.room
+                ] for index, change in enumerate(dm.get_profilechanges())
+            ]
             
         }
     )

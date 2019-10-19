@@ -106,14 +106,17 @@ new Vue({
         },
 
         getDays: function () {
+            console.log("Requested days...");
             this.getAPIInfo(this.page.days);
         },
 
         getRegistrations: function () {
+            console.log("Requested registrations...");
             this.getAPIInfo(this.page.registrations);
         },
 
         getProfilechanges: function () {
+            console.log("Requested profile changes...");
             this.getAPIInfo(this.page.profileChanges);
         }
     }
