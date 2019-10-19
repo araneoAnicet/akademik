@@ -7,6 +7,7 @@ new Vue({
     data: {
         getAPIInfo_error_message: 'Looks like there is not data to handle ;-(',
         show_getAPIInfo_error_message: false,
+        show_sign_out_warning: false,
         processing_ajax: false,
         processing_link_request: false,
         link_data: {},
@@ -34,6 +35,21 @@ new Vue({
     },
 
     methods: {
+        pressedSignOut: function () {
+            this.show_sign_out_warning = true;
+        },
+
+        unpressedSignOut: function () {
+            this.show_sign_out_warning = false;
+        },
+        signOut: function() {
+            localStorage.admin_token = '';
+            localStorage.admin_email = '';
+            this.admin_token = '';
+            this.admin_email = '';
+            window.location.replace('http://localhost:5000/admin');
+
+        },
         getFormData: function () {
             this.server_message = '';
             this.ajax_processing_message = 'Requesting admin token...';
@@ -84,6 +100,7 @@ new Vue({
         },
 
         getAPIInfo: function (link_end) {
+            this.show_getAPIInfo_error_message = false;
             this.link_data = {};
             this.processing_link_request = true;
             fetch(`http://localhost:5000/api/${link_end}`, {

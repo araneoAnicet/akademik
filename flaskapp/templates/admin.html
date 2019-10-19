@@ -54,7 +54,17 @@
           </transition>
   </form>
 
-<div class="popup-window" v-if="show_login_window"></div>
+  <transition name="fade">
+  <div v-if="show_sign_out_warning" class="centred-box">
+    <h1>Are you sure you want to sign out?</h1>
+    <div class="form-group">
+      <button type="button" v-on:click="signOut();" class="btn btn-success"> Sure! </button>
+      <button type="button" v-on:click="unpressedSignOut();" class="btn btn-danger"> No, I'm not sure about it... </button>
+    </div>
+  </div>
+</transition>
+
+<div class="popup-window" v-if="show_login_window || show_sign_out_warning"></div>
 <h1 style="text-align: center;">admin page</h1>
   <div class="card text-center">
       <div class="card-header">
@@ -67,6 +77,9 @@
           </li>
           <li class="nav-item">
             <a class="nav-link" v-on:click="getProfilechanges();" href="#" tabindex="-1" aria-disabled="true">profile changes</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" style="color: red;" v-on:click="pressedSignOut();;" href="#">sign out</a>
           </li>
         </ul>
       </div>
@@ -97,7 +110,9 @@
         
       </tbody>
     </table>
-    <p v-if="show_getAPIInfo_error_message" stype="text-align: center;"> [[ getAPIInfo_error_message ]] </p>
+    <transition name="fade">
+        <p v-if="show_getAPIInfo_error_message" stype="text-align: center;"> [[ getAPIInfo_error_message ]] </p>
+    </transition>
     <div v-if="processing_link_request">
       <h2>Waiting for server response...</h2>
       <div class="spinner-grow" role="status">
