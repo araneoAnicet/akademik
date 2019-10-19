@@ -196,3 +196,6 @@ class DatabaseManager():
             self.db.session.add(Day(day=parsed_date[0], month=parsed_date[1], year=parsed_date[2]))
             self.db.session.commit()
         return searched_day
+
+    def get_days(self):
+        return self.Day.query.all()

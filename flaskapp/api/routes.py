@@ -228,3 +228,44 @@ def accept_profilechange(email):
             }
         }
     )
+
+@mod.route('/get_days')
+def get_days():
+    iterable_list = []
+    iterable_index = 1
+    for day in dm.get_days():
+        for user in day.requested_by:
+            iterable_list.append([
+                iterable_index,
+                user.room,
+                day.day + '.' + day.month + '.' + day.year
+            ])
+            iterable_index += 1
+    return response_format(
+        data={
+            'parameters': [
+                '№',
+                'Room',
+                'Date',
+                'Commit'
+            ],
+            'iterable': iterable_list,
+            'days': [
+                {
+                    'day': day.day,
+                    'month': day.month,
+                    'year': day.year,
+                    'requested_by': [
+                        {
+                            'name': user.name,
+                            'surname': user.surname,
+                            'email': user.email,
+                            'room': user.room
+                            } for user in day.requested_by
+                        ],
+                    'accepted_for': day.accepted_candidates
+                } for day in dm.get_days()
+            ],
+
+        }
+    )
