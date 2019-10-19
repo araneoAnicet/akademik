@@ -1,6 +1,7 @@
 from flask_sqlalchemy import SQLAlchemy
 from passlib.hash import sha256_crypt
 from flaskapp import db
+from datetime import datetime
 
 books = db.Table('books',
     db.Column('user_id', db.Integer, db.ForeignKey('user.id'), primary_key=True),
@@ -28,6 +29,7 @@ class Profilechange(db.Model):
         return f'{self.name} {self.surname}: {self.room} ({self.email})'
 
 class User(db.Model):
+    registration_date = db.Column(db.DateTime, default=datetime.utcnow())
     is_admin = db.Column(db.Boolean, default=False, nullable=True)
     is_registered = db.Column(db.Boolean, default=False, nullable=False)
     id = db.Column(db.Integer, primary_key=True)

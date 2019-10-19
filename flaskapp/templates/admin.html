@@ -78,56 +78,32 @@
             
 
 
-  <table class="table">
+
+  <table v-if="!show_getAPIInfo_error_message && !processing_link_request" class="table">
       <thead class="thead-dark">
         <tr>
-          <th scope="col">№</th>
-          <th scope="col">Status</th>
-          <th scope="col">Name & Surname</th>
-          <th scope="col">Room</th>
-          <th scope="col">Day</th>
-          <th scope="col">commit</th>
+          <th v-for="parameter in link_data.parameters" scope="col">[[ parameter ]]</th>
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <th scope="row">1</th>
-          <th class="btn-outline-success">New!</th>
-          <td>Mark Otto</td>
-          <td>712</td>
-          <td>18.11.2019</td>
+        <tr v-for="iterable in link_data.iterable">
+          <td v-for="i in iterable" scope="row">[[ i ]]</td>
           <td class="btn-group">
                   <button class="btn btn-outline-success">accept</button>
                   <button class="btn btn-outline-danger">reject</button>
           </td>
         </tr>
-        <tr>
-          <th scope="row">2</th>
-          <th class="btn-outline-success">New!</th>
-          <td>Jacob Thornton</td>
-          <td>702</td>
-          <td>13.11.2019</td>
-          <td class="btn-group">
-              <button class="btn btn-outline-success">accept</button>
-              <button class="btn btn-outline-danger">reject</button>
-      </td>
-        </tr>
-        <tr>
-          <th scope="row">3</th>
-          <th class="btn-outline-info">Still waiting...</th>
-          <td>Larry Bird</td>
-          <td>707</td>
-          <td>13.11.2019</td>
-          <td class="btn-group">
-              <button class="btn btn-outline-success">accept</button>
-              <button class="btn btn-outline-danger">reject</button>
-      </td>
-        </tr>
+        
+        
       </tbody>
     </table>
-          <!--
-              Here it ends
-          -->
+    <p v-if="show_getAPIInfo_error_message" stype="text-align: center;"> [[ getAPIInfo_error_message ]] </p>
+    <div v-if="processing_link_request">
+      <h2>Waiting for server response...</h2>
+      <div class="spinner-grow" role="status">
+        <span class="sr-only">Waiting...</span>
+      </div>
+    </div>
       </div>
     </div>
 </div>

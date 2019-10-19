@@ -106,6 +106,13 @@ def check_token():
 @mod.route('/get_unregistered_users', methods=['GET'])
 def get_users():
     return response_format(data={
+        'parameters': [
+            '№',
+            'Name & Surname',
+            'Room',
+            'Date',
+            'Commit'
+        ],
         'users': list(map(
             lambda user: {
                 'name': user.name,
@@ -113,7 +120,14 @@ def get_users():
                 'room': user.room,
                 'email': user.email
             }, dm.get_unregistered_users()
-        ))
+        )),
+        'iterable': [[
+                str(index + 1),
+                user.name + ' ' + user.surname,
+                user.room,
+                user.registration_date
+        ] for index, user in enumerate(dm.get_unregistered_users())
+                ]
     })
 
 @mod.route('/get_admins', methods=['GET'])

@@ -5,12 +5,21 @@ new Vue({
     delimiters: ['[[', ']]'],
     el: '#app',
     data: {
+        getAPIInfo_error_message: 'Looks like there is not data to handle ;-(',
+        show_getAPIInfo_error_message: false,
         processing_ajax: false,
+        processing_link_request: false,
+        link_data: {},
         show_login_window: true,
         ajax_processing_message: '',
         server_message: '',
         admin_token: '',
         admin_email: '',
+        page : Object.freeze({
+            days: "get_days",
+            registrations: "get_unregistered_users",
+            profileChanges: "get_profilechanges"
+        })
     },
 
     mounted () {
@@ -66,10 +75,45 @@ new Vue({
                 if (data.status == 200) {
                     this.admin_token = localStorage.admin_token;
                     this.show_login_window = false;
+                    this.getRegistrations();
                 } else {
                     localStorage.admin_token = '';
                 }
             })
+        },
+
+        getAPIInfo: function (link_end) {
+            this.link_data = {};
+            this.processing_link_request = true;
+            fetch(`http://localhost:5000/api/${link_end}`, {
+                method: 'GET',
+                headers: {
+                    'Authorization': this.admin_token
+                }
+            }).then(response => response.json()).then((data) => {
+                if (data.status == 200) {
+                    this.link_data = data.data;
+                    if (this.link_data.iterable.length) {
+                        this.show_getAPIInfo_error_message = false;
+                    }
+                    else {
+                        this.show_getAPIInfo_error_message = true;
+                    }
+                }
+            })
+            this.processing_link_request = false;
+        },
+
+        getDays: function () {
+            this.getAPIInfo(this.page.days);
+        },
+
+        getRegistrations: function () {
+            this.getAPIInfo(this.page.registrations);
+        },
+
+        getProfilechanges: function () {
+            this.getAPIInfo(this.page.profileChanges);
         }
     }
 })
