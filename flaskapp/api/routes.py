@@ -258,30 +258,20 @@ def get_profilechanges():
 @mod.route('/accept_profilechange/<email>')
 @admin_required
 def accept_profilechange(email):
-    searched_user = dm.get_user(email)
-    user_copy = searched_user.copy()
-    change = searched_user.requested_changes.first()
-    change_copy = change.copy()
-
-    searched_user.name = change.name
-    searched_user.surname = change.surname
-    searched_user.room = change.room
-
-    db.session.remove(change)
-    db.session.commit()
+    user, change, searched_user = dm.accept_profilechange(email)
     return response_format(
         message='Changes have been commited',
         data={
             'user_before': {
-                'name': user_copy.name,
-                'surname': user_copy.surname,
-                'room': user_copy.room,
-                'email': user_copy.email
+                'name': user.name,
+                'surname': user.surname,
+                'room': user.room,
+                'email': user.email
             },
             'changes': {
-                'name': change_copy.name,
-                'surname': change_copy.surname,
-                'room': change_copy.room,
+                'name': change.name,
+                'surname': change.surname,
+                'room': change.room,
                 'email': searched_user.email
             }
         }

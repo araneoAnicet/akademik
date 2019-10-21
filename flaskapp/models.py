@@ -183,6 +183,20 @@ class DatabaseManager():
     def get_profilechanges(self):
         return self.Profilechange.query.all()
 
+    def accept_profilechange(self, email):
+        searched_user = self.get_user(email)
+        user_copy = searched_user.copy()
+        change = searched_user.requested_changes.first()
+        change_copy = change.copy()
+
+        searched_user.name = change.name
+        searched_user.surname = change.surname
+        searched_user.room = change.room
+
+        self.db.session.remove(change)
+        self.db.session.commit()
+        return user_copy, change_copy, searched_user
+
     def add_profilechange(self, user_email, change_obj):
         change_copy = change_obj.copy()
         self.db.session.add(change_copy)
