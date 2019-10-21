@@ -72,7 +72,7 @@ def admin_required(func):
     def decorator(*args, **kwargs):
         token = request.headers['Authorization']
         decoded = jwt.decode(token, current_app.config['SECRET_KEY'])
-        if decoded.is_admin:
+        if decoded['is_admin']:
             return func(*args, **kwargs)
         return response_format(
             status=510,
@@ -158,6 +158,7 @@ def check_token():
     )
 
 @mod.route('/get_unregistered_users', methods=['GET'])
+@admin_required
 def get_users():
     return response_format(data={
         'parameters': [
@@ -196,6 +197,7 @@ def get_admins():
     )
 
 @mod.route('/accept_user_registration/<email>', methods=['PUT'])
+@admin_required
 def accept_registration(email):
     searched_user = dm.get_user(email)
     searched_user.is_registered = True
@@ -213,6 +215,7 @@ def accept_registration(email):
     )
 
 @mod.route('/get_profilechanges', methods=['GET'])
+@admin_required
 def get_profilechanges():
     return response_format(
         data={
@@ -253,6 +256,7 @@ def get_profilechanges():
     )
 
 @mod.route('/accept_profilechange/<email>')
+@admin_required
 def accept_profilechange(email):
     searched_user = dm.get_user(email)
     user_copy = searched_user.copy()
