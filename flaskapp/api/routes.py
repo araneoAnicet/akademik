@@ -4,6 +4,7 @@ from flaskapp.models import DatabaseManager, User, Day, Profilechange, db_errors
 import jwt
 from jwt import ExpiredSignatureError, InvalidTokenError
 from datetime import datetime
+from functools import wraps
 
 
 dm = DatabaseManager(db, User, Day, Profilechange)
@@ -26,6 +27,59 @@ def response_format(
         }
     }), status
 
+def token_required(func):
+    @wraps(func)
+    def decorator(*args, **kwargs):
+        token = request.headers['Authorization']
+        if token:
+            try:
+                decoded_jwt = jwt.decode(token, current_app.config['SECRET_KEY'])
+                try:
+                    
+                    dm.get_user(decoded_jwt['email'])
+                    return func(*args, **kwargs)
+                    
+                except db_errors['USER_DOES_NOT_EXIST']:
+                    return response_format(
+                        message='User has been deleted',
+                        status=410,
+                        data={
+                            'user': {
+                                'email': decoded_jwt['email'],
+                                'is_admin': True
+                            }
+                        } 
+                    )
+            except ExpiredSignatureError:
+                return response_format(
+                    message='Expired token',
+                    status=401
+                )
+            except InvalidTokenError:
+                return response_format(
+                    message='Invalid token',
+                    status=401
+                )
+        return response_format(
+            message='Token is missing',
+            status=401
+        )
+    return decorator
+
+def admin_required(func):
+    @wraps(func)
+    @token_required
+    def decorator(*args, **kwargs):
+        token = request.headers['Authorization']
+        decoded = jwt.decode(token, current_app.config['SECRET_KEY'])
+        if decoded.is_admin:
+            return func(*args, **kwargs)
+        return response_format(
+            status=510,
+            message='Sorry, this content is only available for administration'
+        )
+    return decorator
+
 
 @mod.route('/get_api_token', methods=['POST', 'GET'])
 def get_token():
@@ -38,13 +92,13 @@ def get_token():
         try:
             is_signed_in = dm.user_sign_in(email, password)
             user = dm.get_user(email)
-            if is_signed_in and user.is_admin:
+            if is_signed_in:
                 return response_format(
                     data={
                         'token': jwt.encode(
                             {
                                 'email': email,
-                                'is_admin': True,
+                                'is_admin': user.is_admin,
                                 'exp': datetime.utcnow() + current_app.config['JWT_EXPIRATION']
                                 },
                                 current_app.config['SECRET_KEY']
